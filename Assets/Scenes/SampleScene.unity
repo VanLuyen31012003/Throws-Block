@@ -169,7 +169,7 @@ MonoBehaviour:
   SquarePrefap: {fileID: 3584258566316568156, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
   Row: 6
   Col: 6
-  space: 0.8
+  space: 0.77
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

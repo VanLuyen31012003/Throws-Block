@@ -10,16 +10,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private GameObject SquarePrefap;
-	/// <summary>
-	/// prefap của  square
-	/// </summary>
-	[SerializeField]
-	private GameObject SquarePrefapGreen;
-	/// <summary>
-	/// prefap của  square
-	/// </summary>
-	[SerializeField]
-	private GameObject SquarePrefapRed;
+
 	/// <summary>
 	/// số dòng
 	/// </summary>
@@ -41,7 +32,7 @@ public class GridManager : MonoBehaviour
     /// <summary>
     /// grid quản lý các ô
     /// </summary>
-    private SquareBox[,] GridContainer;
+    private SquareBox[,] SquareContainer;
 
     /// <summary>
     /// size width của prefap
@@ -57,7 +48,7 @@ public class GridManager : MonoBehaviour
 	#region function
 	private void Awake()
     {
-        this.GridContainer= new SquareBox[Row, Col];
+        this.SquareContainer= new SquareBox[Row, Col];
         SpriteRenderer spriteRenderer = SquarePrefap.GetComponent<SpriteRenderer>();
         this.width= spriteRenderer.sprite.bounds.size.x;
 		this.height = spriteRenderer.sprite.bounds.size.y;
@@ -77,21 +68,14 @@ public class GridManager : MonoBehaviour
                 GameObject gridItem = Instantiate(SquarePrefap,this.transform);
                 float posX= j *width ;
 				float posy = i*-height;
-				gridItem.transform.position = new Vector2(posX,posy);
+				gridItem.transform.localPosition = new Vector2(posX,posy);
+				SquareContainer[i, j]=gridItem.GetComponent<SquareBox>();
+				if (i==Row-1)
+                {
+                    SquareContainer[i, j].SpawnBlock(j%2==0?ETypeBlock.GREEN:ETypeBlock.RED, 1);
+				}    		
 			}    
         }
-		//for (int i = 0; i < Row; i++)
-		//{
-		//	for (int j = 0; j < Col; j++)
-		//	{
-		//		GameObject gridItem = Instantiate(SquarePrefap, this.transform);
-		//		float posX = j * space;
-		//		float posy = i * -space;
-		//		gridItem.transform.position = new Vector2(posX, posy + 0.05f);
-		//	}
-		//}
-		float posGridx = -3;
-        float posGridy = 3;
         this.transform.position = new Vector2(-1.9f, 3 );
     }
 
