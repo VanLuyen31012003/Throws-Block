@@ -1,0 +1,11 @@
+# Bỏ qua thư mục cache và config của Visual Studio/IDE
+.vs/
+
+# Các file khác thường không cần thiết
+*.user
+*.suo
+# Nếu là project Unity, bạn cũng nên thêm:
+Library/
+Temp/
+Obj/
+#... (và nhiều mục khác tùy thuộc vào ngôn ngữ/framework)
