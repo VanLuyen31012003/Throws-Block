@@ -99,4 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SquarePrefapGreen: {fileID: 6786307551459400277, guid: b25524b15b9b64647897d0f65283c6a6, type: 3}
   SquarePrefapRed: {fileID: 6237564840710952741, guid: 5c712b6fb1332d84eb6037633b2b080c, type: 3}
+  SquarePrefapYellow: {fileID: 3975828434142434780, guid: 93dcae633d044844e85dd95ad93ccdd2, type: 3}
+  SquarePrefapBlue: {fileID: 4207027223562362135, guid: 72854682fb0b5aa47aed0fd824c1bc3e, type: 3}
   lstBlock: []
