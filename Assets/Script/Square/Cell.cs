@@ -48,18 +48,19 @@ public class Cell :MonoBehaviour
 			case ETypeBlock.YELLOW:
 				prefapInst = this.SquarePrefapYellow;
 				break;
-			case ETypeBlock.BLUE:
+			case ETypeBlock.BLUE:	
 				prefapInst = this.SquarePrefapBlue;
-				break;
+				break;	
 		}
 		for (int i = 0; i < count; i++)
 		{
 			GameObject block = Instantiate(prefapInst, transform);
-			block.transform.localPosition = new Vector2(0, (lstBlock.Count+1)/10);
-			block.transform.localPosition = Vector2.zero;
-
-			Debug.Log("x:"+block.transform.position.x);
-			Debug.Log("y:" + block.transform.position.y);
+			float y = (float)(lstBlock.Count + 1) / 15f;
+			block.transform.localPosition = new Vector2(0,y);
+			//block.transform.localPosition = Vector2.zero;	
+				
+			//Debug.Log("x:"+block.transform.position.x);
+			//Debug.Log("y:" + block.transform.position.y);
 			// thêm thằng này đê nó hiển thị trên
 			block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count+1;
 
