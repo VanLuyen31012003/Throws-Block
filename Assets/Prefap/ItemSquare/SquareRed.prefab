@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6536469913763144525}
   - component: {fileID: 5294058608114158319}
   - component: {fileID: -2618908136214112164}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SquareRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e50bf4b335dd60844b17459e4c602a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typeBlock: 0
+  length: 0.1
+  typeBlock: 1
 --- !u!50 &-2618908136214112164
 Rigidbody2D:
   serializedVersion: 4
@@ -114,7 +115,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

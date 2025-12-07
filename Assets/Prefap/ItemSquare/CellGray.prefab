@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6336418255081815995}
   - component: {fileID: 1459080347875529929}
   - component: {fileID: -3085716124572479}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CellGray
-  m_TagString: Untagged
+  m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

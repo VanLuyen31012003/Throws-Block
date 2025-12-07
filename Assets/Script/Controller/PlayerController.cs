@@ -41,12 +41,7 @@ public class PlayerController : MonoBehaviour
 	#region function monobehaviour
 	private void Start()
 	{
-		SpriteRenderer sprite = this.gameObject.GetComponent<SpriteRenderer>();
-		this.width=sprite.bounds.size.x/2;
-		this.ETypeBlockRandom = (ETypeBlock)UnityEngine.Random.Range(1, 4);
-		this.count = UnityEngine.Random.Range(1, 8);
-		Debug.Log("random ra giá trị:" + (int)ETypeBlockRandom+ count);
-		this.cell.SpawnBlock(ETypeBlockRandom,count);	
+		this.Initialize();
 	}
 	private void Update()
 	{
@@ -62,16 +57,48 @@ public class PlayerController : MonoBehaviour
 		}
 		this.Shoot();
 	}
+	#endregion
+
+	#region function logic
+	/// <summary>
+	/// Khởi tạo 
+	/// </summary>
+	private void Initialize()
+	{
+		SpriteRenderer sprite = this.gameObject.GetComponent<SpriteRenderer>();
+		this.width = sprite.bounds.size.x / 2;
+		this.SpawnBulletSquare();
+	}	
+
+	/// <summary>
+	/// Bắn các ô bay lên
+	/// </summary>
 	public void Shoot()
 	{
-		if(Input.GetKeyDown(KeyCode.Q))
+		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			foreach(GameObject gameObj in this.cell.lstBlock )
+			GameManager.Instance.GridManager.totalSquareWillAdd=this.cell.lstBlock.Count;
+			foreach (GameObject gameObj in this.cell.lstBlock)
 			{
-			   gameObj.GetComponent<Square>().Move(speed*100);
-				
-			}	
-		}	
+				gameObj.GetComponent<Square>().Move(speed * 100);
+				gameObj.transform.SetParent(null);
+			}
+			this.cell.lstBlock.Clear();
+			/// sinh lại để bắn tiếp
+			this.SpawnBulletSquare();
+		}
+	}
+
+	/// <summary>
+	/// Sinh các square đạn bắn
+	/// </summary> 
+	public void SpawnBulletSquare()
+	{
+		this.ETypeBlockRandom = (ETypeBlock)UnityEngine.Random.Range(1, 4);
+		this.count = UnityEngine.Random.Range(1, 8);
+		Debug.Log("random ra giá trị:" + (int)ETypeBlockRandom + count);
+		this.cell.SpawnBlock(ETypeBlockRandom, count);
+
 	}
 	#endregion
 }
