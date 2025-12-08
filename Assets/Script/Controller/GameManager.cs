@@ -72,175 +72,173 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	private void LoadInfoLevelConfigs()
 	{
-		LevelConfig config = new LevelConfig()
-		{
-			level = 1,
-			rows = 6,
-			cols = 6,
+        LevelConfig config = new LevelConfig()
+        {
+            level = 1,
+            rows = 6,
+            cols = 6,
+            cellDataConfigs = new List<CellDataConfig>()
+    {
+		// ===== ROW 0 =====
+		new CellDataConfig(){ row=0, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 }, // LINK
+		}},
+        new CellDataConfig(){ row=0, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=0, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=0, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=0, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=0, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
 
-			cellDataConfigs = new List<CellDataConfig>()
-		{
-			// Row 0
-			new CellDataConfig(){ row=0, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-			new CellDataConfig(){ row=0, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=0, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=1, count=2 }
-			}},
-			new CellDataConfig(){ row=0, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-			new CellDataConfig(){ row=0, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=2 },
-				new SquareBoxDataConfig(){ type=3, count=1 }
-			}},
-			new CellDataConfig(){ row=0, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
+		// ===== ROW 1 =====
+		new CellDataConfig(){ row=1, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=1, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=1, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=1, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=1, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=1, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
 
-			// Row 1
-			new CellDataConfig(){ row=1, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=1, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=2 },
-				new SquareBoxDataConfig(){ type=3, count=1 }
-			}},
-			new CellDataConfig(){ row=1, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=2 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=1, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 }
-			}},
-			new CellDataConfig(){ row=1, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
-			new CellDataConfig(){ row=1, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
+		// ===== ROW 2 =====
+		new CellDataConfig(){ row=2, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=2, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=2, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=2, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=2, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=2, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
 
-			// Row 2
-			new CellDataConfig(){ row=2, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=2 },
-				new SquareBoxDataConfig(){ type=2, count=1 }
-			}},
-			new CellDataConfig(){ row=2, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 }
-			}},
-			new CellDataConfig(){ row=2, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
-			new CellDataConfig(){ row=2, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
-			new CellDataConfig(){ row=2, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=2 },
-				new SquareBoxDataConfig(){ type=1, count=1 }
-			}},
-			new CellDataConfig(){ row=2, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=2 },
-				new SquareBoxDataConfig(){ type=2, count=1 }
-			}},
+		// ===== ROW 3 =====
+		new CellDataConfig(){ row=3, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=3, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=3, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=3, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=3, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=3, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
 
-			// Row 3
-			new CellDataConfig(){ row=3, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=1, count=2 }
-			}},
-			new CellDataConfig(){ row=3, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=2 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=3, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=2 },
-				new SquareBoxDataConfig(){ type=1, count=1 }
-			}},
-			new CellDataConfig(){ row=3, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-			new CellDataConfig(){ row=3, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 }
-			}},
-			new CellDataConfig(){ row=3, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
+		// ===== ROW 4 =====
+		new CellDataConfig(){ row=4, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=4, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=4, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=4, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=4, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=4, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
 
-			// Row 4
-			new CellDataConfig(){ row=4, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=2 },
-				new SquareBoxDataConfig(){ type=3, count=1 }
-			}},
-			new CellDataConfig(){ row=4, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=2 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=4, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=1, count=2 }
-			}},
-			new CellDataConfig(){ row=4, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-			new CellDataConfig(){ row=4, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 }
-			}},
-			new CellDataConfig(){ row=4, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=1 },
-				new SquareBoxDataConfig(){ type=4, count=2 }
-			}},
+		// ===== ROW 5 =====
+		new CellDataConfig(){ row=5, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=5, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+        new CellDataConfig(){ row=5, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=1, count=1 },
+            new SquareBoxDataConfig(){ type=4, count=1 },
+        }},
+        new CellDataConfig(){ row=5, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=2, count=1 },
+            new SquareBoxDataConfig(){ type=1, count=1 },
+        }},
+        new CellDataConfig(){ row=5, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=3, count=1 },
+            new SquareBoxDataConfig(){ type=2, count=1 },
+        }},
+        new CellDataConfig(){ row=5, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
+            new SquareBoxDataConfig(){ type=4, count=1 },
+            new SquareBoxDataConfig(){ type=3, count=1 },
+        }},
+    }
+        };
 
-			// Row 5
-			new CellDataConfig(){ row=5, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=1 },
-				new SquareBoxDataConfig(){ type=1, count=2 }
-			}},
-			new CellDataConfig(){ row=5, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=2, count=2 },
-				new SquareBoxDataConfig(){ type=4, count=1 }
-			}},
-			new CellDataConfig(){ row=5, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=1, count=1 },
-				new SquareBoxDataConfig(){ type=3, count=2 }
-			}},
-			new CellDataConfig(){ row=5, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-			new CellDataConfig(){ row=5, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=3, count=2 },
-				new SquareBoxDataConfig(){ type=1, count=1 }
-			}},
-			new CellDataConfig(){ row=5, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>() {
-				new SquareBoxDataConfig(){ type=4, count=1 },
-				new SquareBoxDataConfig(){ type=2, count=2 }
-			}},
-		}
-		};
 
-		levelConfigs.Add(config);
+        levelConfigs.Add(config);
 	}
 
 	#endregion
