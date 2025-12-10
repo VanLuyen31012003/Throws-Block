@@ -110,7 +110,10 @@ public class GridManager : MonoBehaviour
 			CellGrid[i, j].AddBlock(gameObj);
 			this.totalSquareWillAdd -= 1;
 			if(this.totalSquareWillAdd <=0)
+			{
 				this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
+			}	
+				
 		}
 	}
 	/// <summary>
@@ -164,15 +167,23 @@ public class GridManager : MonoBehaviour
 	/// </summary>
 	/// <param name="i"></param>
 	/// <param name="j"></param>
-	private void PrepareMerge(int iNew, int jNew,int iOld,int jOld,ETypeBlock type)
+	private void PrepareMerge(int iNew, int jNew, int iOld, int jOld, ETypeBlock type)
 	{
-		this.totalSquareWillAdd = this.GetCell(iOld, jOld).GetListSameTypeFirst(type,true).Count; 
-		foreach (var square in this.GetCell(iOld,jOld).GetListSameTypeFirst(type))
+		// Bắt đầu Coroutine, Coroutine này sẽ chờ 0.5 giây trước khi chạy logic merge để tạo cảm giác từ từ
+		StartCoroutine(DelayedMergeAction(iNew, jNew, iOld, jOld, type, 0.1f));
+	}
+
+	IEnumerator DelayedMergeAction(int iNew, int jNew, int iOld, int jOld, ETypeBlock type, float delay)
+	{
+		//delay nó tí
+		yield return new WaitForSeconds(delay);
+		this.totalSquareWillAdd = this.GetCell(iOld, jOld).GetListSameTypeFirst(type, true).Count;
+
+		foreach (var square in this.GetCell(iOld, jOld).GetListSameTypeFirst(type))
 		{
+			// khả năng đoạn này cũng vần
 			this.SnapMerge(iNew, jNew, square);
 		}
-	}	
-
-
+	}
 	#endregion
 }

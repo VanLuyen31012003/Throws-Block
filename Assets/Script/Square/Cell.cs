@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Cell :MonoBehaviour
@@ -28,6 +29,12 @@ public class Cell :MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	private GameObject SquarePrefapBlue;
+
+	/// <summary>
+	/// text tổng số square block ở trên cùng chung loại
+	/// </summary>
+	[SerializeField]
+	private TextMesh TotalNumberSquareTopSameType;
 	#endregion
 
 	#region public field
@@ -79,6 +86,24 @@ public class Cell :MonoBehaviour
 			block.SetActive(true);
 			lstBlock.Add(block);
 		}
+		this.SetTextNumberTotalSameType();
+	}
+	/// <summary>
+	/// Tính toán lại tổng số ô trên cùng có same type
+	/// </summary>
+	public void SetTextNumberTotalSameType()
+	{
+		this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
+		// tức là nó đang rỗng
+		if(lstBlock.Count<=0)
+		{
+			this.TotalNumberSquareTopSameType.gameObject.transform.position = this.transform.position;
+		}
+		else
+		{
+			this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
+			this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
+		}
 	}
 
 	/// <summary>
@@ -95,6 +120,7 @@ public class Cell :MonoBehaviour
 		block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
 		block.SetActive(true);
 		lstBlock.Add(block);
+		this.SetTextNumberTotalSameType();
 	}
 
 	/// <summary>
@@ -149,7 +175,32 @@ public class Cell :MonoBehaviour
 		}
 		if(!isGetCount)
 			this.lstBlock.RemoveRange(indexRemove,list.Count);
+		this.SetTextNumberTotalSameType();
 		return list;
+	}
+	/// <summary>
+	/// Lấy ra tổng số lượng các prefap ở đầu có cùng kiểu
+	/// </summary>
+	/// <param name="type"></param>
+	/// <param name="isGetCount"></param>
+	/// <returns></returns>
+	public int GetTotalSuareSameTypeOntop()
+	{
+		List<GameObject> list = new List<GameObject>();
+		ETypeBlock type = this.GetLastSquareType();
+
+		for (int i = this.lstBlock.Count - 1; i >= 0; i--)
+		{
+			if (this.lstBlock[i].GetComponent<Square>().typeBlock == type)
+			{
+				list.Add(lstBlock[i]);
+			}
+			// nếu k phải thì break luôn, k cần lấy các thằng sau nữa
+			else
+				break;
+		}
+
+		return list.Count;
 	}
 	#endregion
 }
