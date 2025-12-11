@@ -17,6 +17,14 @@ public class LevelConfig
 	/// </summary>
 	public int cols;
 	/// <summary>
+	/// Số lượt 1 round
+	/// </summary>
+	public int numberInARound;
+	/// <summary>
+	///  Yêu cầu target 1 route
+	/// </summary>
+	public List<Target> targets;
+	/// <summary>
 	/// thông tin phân phối các ô
 	/// </summary>
 	public List<CellDataConfig> cellDataConfigs;
