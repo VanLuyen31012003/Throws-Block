@@ -39,10 +39,10 @@ public class Square : MonoBehaviour
 
 	private void Update()
 	{
-		if (this.rb.velocity.y>0)
-		{
-			ShootRaycast();
-		}
+		//if (this.rb.velocity.y>0)
+		//{
+		//	ShootRaycast();
+		//}
 	}
 	#endregion
 
@@ -60,12 +60,15 @@ public class Square : MonoBehaviour
 		{
 			if (hit.distance<=this._lengthSquare)
 			{
-				/// lấy ra thằng cell mà nó bắn ray cast c húng
+				/// lấy ra thằng cell mà nó bắn ray cast trúng
 				Cell cellCollison  =hit.collider.gameObject.GetComponent<Cell>();
 				this.rb.velocity = Vector2.zero;
 				// check xem có merge được với ô chúng kia không
-				GameManager.Instance.GridManager.SnapMerge(cellCollison.x,cellCollison.y,this.gameObject);
-			
+				//if(GameManager.Instance.GridManager.CanMerge(cellCollison.x, cellCollison.y, this.gameObject))
+				//{
+				//	GameManager.Instance.GridManager.SnapMerge(cellCollison.x, cellCollison.y, this.gameObject);
+				//}
+
 			}		
 		}
 	}

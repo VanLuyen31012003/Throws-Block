@@ -11,14 +11,13 @@ GameObject:
   - component: {fileID: 8457834870178956296}
   - component: {fileID: 1567475673231085787}
   - component: {fileID: 2916696082385903020}
-  - component: {fileID: 3452440992379374699}
   m_Layer: 7
   m_Name: SquareBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8457834870178956296
 Transform:
   m_ObjectHideFlags: 0
@@ -100,30 +99,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   length: 0.1
   typeBlock: 3
---- !u!50 &3452440992379374699
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207027223562362135}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0

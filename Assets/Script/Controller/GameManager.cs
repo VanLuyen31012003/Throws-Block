@@ -220,28 +220,28 @@ public class GameManager : MonoBehaviour
 
 		        // ===== ROW 5 =====
 		        new CellDataConfig(){ row=5, column=0, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=3, count=1 },
-                    new SquareBoxDataConfig(){ type=2, count=1 },
+                    //new SquareBoxDataConfig(){ type=3, count=1 },
+                    //new SquareBoxDataConfig(){ type=2, count=1 },
                 }},
                 new CellDataConfig(){ row=5, column=1, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=4, count=1 },
-                    new SquareBoxDataConfig(){ type=3, count=1 },
+                    //new SquareBoxDataConfig(){ type=4, count=1 },
+                    //new SquareBoxDataConfig(){ type=3, count=1 },
                 }},
                 new CellDataConfig(){ row=5, column=2, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=1, count=1 },
-                    new SquareBoxDataConfig(){ type=4, count=1 },
+                    //new SquareBoxDataConfig(){ type=1, count=1 },
+                    //new SquareBoxDataConfig(){ type=4, count=1 },
                 }},
                 new CellDataConfig(){ row=5, column=3, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=2, count=1 },
-                    new SquareBoxDataConfig(){ type=1, count=1 },
+                    //new SquareBoxDataConfig(){ type=2, count=1 },
+                    //new SquareBoxDataConfig(){ type=1, count=1 },
                 }},
                 new CellDataConfig(){ row=5, column=4, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=3, count=1 },
-                    new SquareBoxDataConfig(){ type=2, count=1 },
+                    //new SquareBoxDataConfig(){ type=3, count=1 },
+                    //new SquareBoxDataConfig(){ type=2, count=1 },
                 }},
                 new CellDataConfig(){ row=5, column=5, squareBoxDataConfigs = new List<SquareBoxDataConfig>(){
-                    new SquareBoxDataConfig(){ type=4, count=1 },
-                    new SquareBoxDataConfig(){ type=3, count=1 },
+                    //new SquareBoxDataConfig(){ type=4, count=1 },
+                    //new SquareBoxDataConfig(){ type=3, count=1 },
                 }},
             }
         };

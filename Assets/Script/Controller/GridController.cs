@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,10 +13,16 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private GameObject SquarePrefap;
 
-    /// <summary>
-    /// space giữa các item trong grid
-    /// </summary>
-    [SerializeField]
+	/// <summary>
+	/// Img background
+	/// </summary>
+	[SerializeField]
+	private GameObject ImgBackground;
+
+	/// <summary>
+	/// space giữa các item trong grid
+	/// </summary>
+	[SerializeField]
     private float space;
 	#endregion
 
@@ -81,17 +88,27 @@ public class GridManager : MonoBehaviour
 		{
 			for (int j = 0; j < this._col; j++)
 			{
+				GameObject imgBg = Instantiate(this.ImgBackground, this.transform);
 				GameObject gridItem = Instantiate(SquarePrefap, this.transform);
 				float posX = j * _width;
 				float posy = i * -_height;
 				gridItem.transform.localPosition = new Vector2(posX, posy);
+				imgBg.transform.localPosition = new Vector2(posX, posy);
 				CellGrid[i, j] = gridItem.GetComponent<Cell>();
 				CellGrid[i, j].x = i;
 				CellGrid[i, j].y = j;
-				foreach (var dataInCell  in this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs)
+				// nếu nó có dữ liệu
+				if(this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count>=1)
 				{
-					CellGrid[i, j].SpawnBlock((ETypeBlock)dataInCell.type, dataInCell.count);
-				}				
+					foreach (var dataInCell in this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs)
+					{
+						CellGrid[i, j].SpawnBlock((ETypeBlock)dataInCell.type, dataInCell.count);
+					}
+				} else
+				{
+					CellGrid[i, j].SpawnBlock(ETypeBlock.NONE, 0);
+				}
+
 				countIndex++;
 			}
 		}
@@ -112,9 +129,24 @@ public class GridManager : MonoBehaviour
 			if(this.totalSquareWillAdd <=0)
 			{
 				this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
-			}	
-				
+			}				
 		}
+	}
+	public bool CanMerge(int i, int j, GameObject gameObj)
+	{
+		if (CellGrid[i, j].GetLastSquareType() == ETypeBlock.NONE || CellGrid[i, j].GetLastSquareType() == gameObj.GetComponent<Square>().typeBlock)
+		{
+			return true;
+		}
+		return false;
+	}
+	public bool TranslateCell(int i, int j, GameObject gameObj)
+	{
+		for (int e =0;e<=_row;e++)
+		{
+			CellGrid[e, j].AddBlock(gameObj);
+		}
+		return false;
 	}
 	/// <summary>
 	/// Check 8 ô xung quanh xem có ô nào có phần tử đầu giống với cái hiện tại vừa add không

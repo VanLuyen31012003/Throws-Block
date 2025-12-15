@@ -35,6 +35,24 @@ public class Cell :MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	private TextMesh TotalNumberSquareTopSameType;
+
+	/// <summary>
+	/// độ dài cộng thêm cho tia ray
+	/// </summary>
+	[SerializeField]
+	private float length = 0.1f;
+	#endregion
+
+	#region  Private Field
+	/// <summary>
+	/// rigid quản lý tác động vật lý
+	/// </summary>
+	private Rigidbody2D rb;
+
+	/// <summary>
+	/// Quản lý độ dài của cái ô square này
+	/// </summary>
+	private float _lengthSquare;
 	#endregion
 
 	#region public field
@@ -47,6 +65,21 @@ public class Cell :MonoBehaviour
 	/// các đối tượng square 
 	/// </summary>
 	public List<GameObject> lstBlock = new List<GameObject>();
+	#endregion
+
+	#region Function MonoBehaviour
+	private void Awake()
+	{
+		this.rb = GetComponent<Rigidbody2D>();
+		this._lengthSquare = this.GetComponent<SpriteRenderer>().bounds.size.x;
+	}
+	private void Update()
+	{
+		if (this.rb.velocity.y > 0)
+		{
+			ShootRaycast();
+		}
+	}
 	#endregion
 
 	#region function logic
@@ -70,22 +103,28 @@ public class Cell :MonoBehaviour
 				break;
 			case ETypeBlock.BLUE:	
 				prefapInst = this.SquarePrefapBlue;
-				break;	
+				break;
+			case ETypeBlock.NONE:
+				break;
+
 		}
-		for (int i = 0; i < count; i++)
+		if(prefapInst!=null)
 		{
-			GameObject block = Instantiate(prefapInst,this.transform);
-			float y = (float)(lstBlock.Count + 1) / 15f;
-			block.transform.localPosition = new Vector2(0,y);
-			//block.transform.localPosition = Vector2.zero;	
-				
-			//Debug.Log("x:"+block.transform.position.x);
-			//Debug.Log("y:" + block.transform.position.y);
-			// thêm thằng này đê nó hiển thị trên
-			block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count+1;
-			block.SetActive(true);
-			lstBlock.Add(block);
-		}
+			for (int i = 0; i < count; i++)
+			{
+				GameObject block = Instantiate(prefapInst, this.transform);
+				float y = (float)(lstBlock.Count + 1) / 15f;
+				block.transform.localPosition = new Vector2(0, y);
+				//block.transform.localPosition = Vector2.zero;	
+
+				//Debug.Log("x:"+block.transform.position.x);
+				//Debug.Log("y:" + block.transform.position.y);
+				// thêm thằng này đê nó hiển thị trên
+				block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
+				block.SetActive(true);
+				lstBlock.Add(block);
+			}
+		}	
 		this.SetTextNumberTotalSameType();
 	}
 	/// <summary>
@@ -93,17 +132,20 @@ public class Cell :MonoBehaviour
 	/// </summary>
 	public void SetTextNumberTotalSameType()
 	{
-		this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
+		//this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 		// tức là nó đang rỗng
 		if(lstBlock.Count<=0)
 		{
+			this.TotalNumberSquareTopSameType.text = "+";
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = this.transform.position;
 		}
 		else
 		{
+			this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
-			this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
 		}
+		this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
+
 	}
 
 	/// <summary>
@@ -201,6 +243,34 @@ public class Cell :MonoBehaviour
 		}
 
 		return list.Count;
+	}
+	#endregion
+
+	#region Move and Collider
+	public void Move(float speed)
+	{
+		Vector2 veloCache = rb.velocity;
+		this.rb.velocity = new Vector2(veloCache.x, speed);
+	}
+	public void ShootRaycast()
+	{
+		RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector2.up, this._lengthSquare / 2 + this.length, GameManager.Instance.LayerMaskCell);
+		Debug.DrawRay(this.transform.position, Vector2.up * (this._lengthSquare / 2 + this.length), Color.red, Time.deltaTime);
+		if (hit.collider != null && hit.collider.CompareTag("Cell"))
+		{
+			if (hit.distance <= this._lengthSquare)
+			{
+				/// lấy ra thằng cell mà nó bắn ray cast trúng
+				Cell cellCollison = hit.collider.gameObject.GetComponent<Cell>();
+				this.rb.velocity = Vector2.zero;
+				// check xem có merge được với ô chúng kia không
+				if (GameManager.Instance.GridManager.CanMerge(cellCollison.x, cellCollison.y, this.gameObject))
+				{
+					GameManager.Instance.GridManager.SnapMerge(cellCollison.x, cellCollison.y, this.gameObject);
+				}
+
+			}
+		}
 	}
 	#endregion
 }
