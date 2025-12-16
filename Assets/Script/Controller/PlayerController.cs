@@ -58,12 +58,6 @@ public class PlayerController : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			//GameManager.Instance.GridManager.totalSquareWillAdd=this.frameShoot.cell.lstBlock.Count;
-			//foreach (GameObject gameObj in this.frameShoot.cell.lstBlock)
-			//{
-			//	gameObj.GetComponent<Square>().Move(speed * 100);
-			//	gameObj.transform.SetParent(null);
-			//}
 			this.frameShoot.currentCell.Move(speed * 100);
 			this.frameShoot.currentCell.gameObject.transform.SetParent(null);
 			this.frameShoot.currentCell=null;

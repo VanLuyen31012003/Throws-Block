@@ -227,7 +227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &84335607
 Transform:
   m_ObjectHideFlags: 0
@@ -1670,7 +1670,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -3085716124572479, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1459080347875529929, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
+      propertyPath: x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1459080347875529929, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
+      propertyPath: y
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1459080347875529929, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
       propertyPath: SquarePrefapRed
@@ -1702,7 +1710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3584258566316568156, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
       propertyPath: m_TagString
-      value: CellShoot
+      value: Cell
       objectReference: {fileID: 0}
     - target: {fileID: 6336418255081815995, guid: 8c41e8ead22eb1a4c84831f6d64ec50d, type: 3}
       propertyPath: m_Enabled

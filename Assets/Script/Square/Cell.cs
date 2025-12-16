@@ -59,7 +59,7 @@ public class Cell :MonoBehaviour
 	/// <summary>
 	/// tọa độ của ô cell này
 	/// </summary>
-	public int x,y;
+	public int x=-1,y=-1;
 
 	/// <summary>
 	/// các đối tượng square 
@@ -197,6 +197,7 @@ public class Cell :MonoBehaviour
 
 	/// <summary>
 	/// Lấy ra tất cả các suqare block có cùng kiểu ở đầu
+	/// Lấy ra xong rồi cũng xóa nó luôn trong list của cell hiện tại nhé
 	/// </summary>
 	/// <param name="type"></param>
 	/// <returns></returns>
@@ -264,9 +265,14 @@ public class Cell :MonoBehaviour
 				Cell cellCollison = hit.collider.gameObject.GetComponent<Cell>();
 				this.rb.velocity = Vector2.zero;
 				// check xem có merge được với ô chúng kia không
-				if (GameManager.Instance.GridManager.CanMerge(cellCollison.x, cellCollison.y, this.gameObject))
+				Debug.LogWarning("giá trị của ô này: " + cellCollison.x + ":" + cellCollison.y);
+				if (GameManager.Instance.GridManager.CanMerge(cellCollison.x, cellCollison.y, this))
 				{
-					GameManager.Instance.GridManager.SnapMerge(cellCollison.x, cellCollison.y, this.gameObject);
+					GameManager.Instance.GridManager.SnapMerge(cellCollison.x, cellCollison.y, this);
+				}
+				else
+				{
+					GameManager.Instance.GridManager.TranslateCell( cellCollison.y, this);
 				}
 
 			}
