@@ -41,7 +41,6 @@ public class FrameShoot : MonoBehaviour
 		float move = Input.GetAxisRaw("Horizontal");
 		if (move != 0)
 		{
-			Debug.Log("vào di chuyển");
 			Vector2 posCache = this.gameObject.transform.position;
 			// nếu pos vượt quá độ dài chia nửa thì đ cho di chuyển nữa
 			if (Math.Abs(posCache.x + move * speed) < maxWidth)

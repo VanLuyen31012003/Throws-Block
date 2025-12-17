@@ -157,7 +157,6 @@ public class Cell :MonoBehaviour
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count + 1) / 15f;
-		Debug.Log("Giá trị của y là"+y);
 		block.transform.localPosition = new Vector2(0, y);
 		block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
 		block.SetActive(true);
@@ -245,6 +244,17 @@ public class Cell :MonoBehaviour
 
 		return list.Count;
 	}
+	/// <summary>
+	/// Clear dữ liệu trong list này đi đồng thời destroy gameobj luôn
+	/// </summary>
+	public void ClearListGameObj()
+	{
+		foreach(GameObject gameobj in this.lstBlock)
+		{
+			Destroy(gameobj);
+		}
+		// đáng nhẽ sẽ clear list đi nhưng mà do cái này bị trỏ chung vùng nhớ
+	}
 	#endregion
 
 	#region Move and Collider
@@ -263,18 +273,15 @@ public class Cell :MonoBehaviour
 			{
 				/// lấy ra thằng cell mà nó bắn ray cast trúng
 				Cell cellCollison = hit.collider.gameObject.GetComponent<Cell>();
-				this.rb.velocity = Vector2.zero;
-				// check xem có merge được với ô chúng kia không
+			
 				Debug.LogWarning("giá trị của ô này: " + cellCollison.x + ":" + cellCollison.y);
-				if (GameManager.Instance.GridManager.CanMerge(cellCollison.x, cellCollison.y, this))
+				// keiemr trả xem ô phía trên ô bắn tia ray trúng đang có dữ liệu không, nếu có thì gọi hàm merge, khôn thì bay tiếp
+				if(GameManager.Instance.GridManager.CheckNone(cellCollison.x, cellCollison.y))
 				{
-					GameManager.Instance.GridManager.SnapMerge(cellCollison.x, cellCollison.y, this);
-				}
-				else
-				{
-					GameManager.Instance.GridManager.TranslateCell( cellCollison.y, this);
-				}
+					this.rb.velocity = Vector2.zero;
+					GameManager.Instance.GridManager.MergeToNoneBlock(cellCollison.x, cellCollison.y, this);
 
+				}
 			}
 		}
 	}

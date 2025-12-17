@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    #region serilize field
-    /// <summary>
-    /// prefap của  square
-    /// </summary>
-    [SerializeField]
-    private GameObject SquarePrefap;
+	#region serilize field
+	/// <summary>
+	/// prefap của  square
+	/// </summary>
+	[SerializeField]
+	private GameObject SquarePrefap;
 
 	/// <summary>
 	/// Img background
@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
 	/// space giữa các item trong grid
 	/// </summary>
 	[SerializeField]
-    private float space;
+	private float space;
 	#endregion
 
 	#region private and public field
@@ -73,10 +73,8 @@ public class GridManager : MonoBehaviour
 		SpriteRenderer spriteRenderer = SquarePrefap.GetComponent<SpriteRenderer>();
 		this._width = spriteRenderer.sprite.bounds.size.x;
 		this._height = spriteRenderer.sprite.bounds.size.y;
-		Debug.Log("size của w:" + _width);
-		Debug.Log("size của h:" + _height);
 		this.BuildGridLayout();
-    }
+	}
 
 	/// <summary>
 	/// xây giao diện grid
@@ -98,13 +96,14 @@ public class GridManager : MonoBehaviour
 				CellGrid[i, j].x = i;
 				CellGrid[i, j].y = j;
 				// nếu nó có dữ liệu
-				if(this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count>=1)
+				if (this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count >= 1)
 				{
 					foreach (var dataInCell in this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs)
 					{
 						CellGrid[i, j].SpawnBlock((ETypeBlock)dataInCell.type, dataInCell.count);
 					}
-				} else
+				}
+				else
 				{
 					CellGrid[i, j].SpawnBlock(ETypeBlock.NONE, 0);
 				}
@@ -122,7 +121,7 @@ public class GridManager : MonoBehaviour
 	{
 		// nếu nó cùng loại thì merge hoặc ô này chưa có cái nào
 		ETypeBlock eTypeCache = cellMerge.GetLastSquareType();
-		if (CellGrid[i, j].GetLastSquareType()== eTypeCache)
+		if (CellGrid[i, j].GetLastSquareType() == eTypeCache || CellGrid[i, j].GetLastSquareType() == ETypeBlock.NONE)
 		{
 			/// bắt đầu merge
 			foreach (var square in cellMerge.GetListSameTypeFirst(eTypeCache))
@@ -131,12 +130,6 @@ public class GridManager : MonoBehaviour
 			}
 			/// sau check 8 ô xung quanh
 			this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
-			// sau khi xong sẽ destroy thằng cell bắn đi
-			// check nếu thằng này k có giá trị x,y tức là nó k phải cell nằm trong grid
-			if (cellMerge.x < 0 && cellMerge.y < 0)
-			{
-				Destroy(cellMerge.gameObject);
-			}
 		}
 	}
 	public bool CanMerge(int i, int j, Cell cellNeedCheck)
@@ -147,17 +140,45 @@ public class GridManager : MonoBehaviour
 		}
 		return false;
 	}
-	public void TranslateCell(int col, Cell cellNeedTranslate)
+	/// <summary>
+	///  hàm này sẽ để merge ô bắn từ slide lên
+	/// </summary>
+	/// <param name="i"></param>
+	/// <param name="j"></param>
+	/// <param name="cellMerge"></param>
+	public void MergeToNoneBlock(int i, int j, Cell cellMerge)
 	{
-		// 1️⃣ Destroy cell ở đầu cột (row = 0)
+		/// bắt đầu merge
+		foreach (var square in cellMerge.lstBlock)
+		{
+			CellGrid[i, j].AddBlock(square);
+		}
+		// xóa thằng cell bắn này đi
+		Destroy(cellMerge.gameObject);
+		// lúc này thì CellGrid[i, j] này đã có dữ liệu
+		/// sau check 8 ô xung quanh để merge
+		this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
+		//cuối cùng check nếu nó vẫn còn thì mình sẽ đẩy ô lên
+		if (CellGrid[i, j].lstBlock.Count > 0)
+		{
+			// chỉ translate khi mà đây là hàng cuối
+			if (i == _row - 1)
+			{
+				this.TranslateCell(i, j, CellGrid[i, j]);
+			}
+		}
+
+	}
+	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
+	{
 		Cell topCell = CellGrid[0, col];
 		if (topCell != null)
 		{
-			StartCoroutine(DelayedTranslate(topCell, 3f));
+			DelayedTranslate(topCell, 3f);
 		}
 
 		// 2️⃣ Dịch các cell còn lại lên trên
-		for (int row = 1; row < _row-2; row++)
+		for (int row = 1; row <= rowIndex; row++)
 		{
 			CellGrid[row - 1, col] = CellGrid[row, col];
 
@@ -170,33 +191,29 @@ public class GridManager : MonoBehaviour
 				float posX = col * _width;
 				float posY = (row - 1) * -_height;
 				CellGrid[row - 1, col].transform.localPosition = new Vector2(posX, posY);
+				CellGrid[row - 1, col].SetTextNumberTotalSameType();
 			}
 		}
-		// 3️⃣ Đưa cell bắn vào vị trí cuối cột
-		int lastRowMerge = _row - 1;
-		CellGrid[lastRowMerge, col] = cellNeedTranslate;
+		// lúc này thì vị trí thứ [rowindex,coll] sẽ vẫn là giá trị hiện tại
+		// lsuc này thì sẽ xóa bỏ dữ liệu ô hiện tại đi
+		//reset dữ liệu về rỗng
+		this.ClearCell(rowIndex,col);
+		// set lại text
+		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
 
-		cellNeedTranslate.transform.SetParent(this.transform);
-		cellNeedTranslate.x = lastRowMerge;
-		cellNeedTranslate.y = col;
-
-		float finalX = col * _width;
-		float finalY = (lastRowMerge) * -_height;
-		cellNeedTranslate.transform.localPosition = new Vector2(finalX, finalY);
-		cellNeedTranslate.gameObject.layer = LayerMask.NameToLayer("Cell");
 	}
 
 	/// <summary>
 	/// Check 8 ô xung quanh xem có ô nào có phần tử đầu giống với cái hiện tại vừa add không
 	/// </summary>
-	public void CheckMergeAround(int i, int j,ETypeBlock typeBlock)
+	public void CheckMergeAround(int i, int j, ETypeBlock typeBlock)
 	{
 		/// Hàng 1 ô đầu
 		if (this.GetCell(i - 1, j - 1) != null && this.GetCell(i - 1, j - 1).CheckMergeCondition(typeBlock))
 			this.PrepareMerge(i - 1, j - 1, i, j, typeBlock);
 		/// Hàng 1 ô 2
 		else if (this.GetCell(i - 1, j) != null && this.GetCell(i - 1, j).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i -1 , j, i, j, typeBlock);
+			this.PrepareMerge(i - 1, j, i, j, typeBlock);
 		/// Hàng 1 ô 3
 		else if (this.GetCell(i - 1, j + 1) != null && this.GetCell(i - 1, j + 1).CheckMergeCondition(typeBlock))
 			this.PrepareMerge(i - 1, j + 1, i, j, typeBlock);
@@ -205,7 +222,7 @@ public class GridManager : MonoBehaviour
 			this.PrepareMerge(i, j - 1, i, j, typeBlock);
 		/// Hàng 2 ô 3
 		else if (this.GetCell(i, j + 1) != null && this.GetCell(i, j + 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i, j + 1,i,j, typeBlock);
+			this.PrepareMerge(i, j + 1, i, j, typeBlock);
 		/// Hàng 3 ô đầu
 		else if (this.GetCell(i + 1, j - 1) != null && this.GetCell(i + 1, j - 1).CheckMergeCondition(typeBlock))
 			this.PrepareMerge(i + 1, j - 1, i, j, typeBlock);
@@ -229,7 +246,7 @@ public class GridManager : MonoBehaviour
 		if (i < 0 || i >= _row || j < 0 || j >= _col)
 		{
 			return null;
-		}	
+		}
 		return this.CellGrid[i, j];
 	}
 	/// <summary>
@@ -240,21 +257,37 @@ public class GridManager : MonoBehaviour
 	private void PrepareMerge(int iNew, int jNew, int iOld, int jOld, ETypeBlock type)
 	{
 		// Bắt đầu Coroutine, Coroutine này sẽ chờ 0.5 giây trước khi chạy logic merge để tạo cảm giác từ từ
-		StartCoroutine(DelayedMergeAction(iNew, jNew, iOld, jOld, type, 0.1f));
+		DelayedMergeAction(iNew, jNew, iOld, jOld, type, 0.1f);
 	}
-
-	IEnumerator DelayedMergeAction(int iNew, int jNew, int iOld, int jOld, ETypeBlock type, float delay)
+	// hàm trả về cell trên ô hiện tại có đang không có phần tử nào không
+	public bool CheckNone(int i, int j)
 	{
-		//delay nó tí
-		yield return new WaitForSeconds(delay);
+		bool x = this.GetCell(i -1, j).lstBlock.Count > 0;
+		Debug.Log("giá trị của checknone là:"+x);
+		return this.GetCell(i-1, j).lstBlock.Count > 0;
+	}
+	// reset lại cell
+	public void ClearCell(int i,int j)
+	{
+		this.GetCell(i,j).ClearListGameObj();
+		int xCache = this.GetCell(i, j).x;
+		int yCache=this.GetCell(i, j).y;
+		this.CellGrid[i,j] =new Cell();
+		this.CellGrid[i, j].lstBlock = new List<GameObject>();
+		this.CellGrid[i, j].x = xCache;
+		this.CellGrid[i,j].y = yCache;
+	}
+	#endregion
+	#region funtion IEnumerator
+	private void DelayedMergeAction(int iNew, int jNew, int iOld, int jOld, ETypeBlock type, float delay)
+	{
 		this.SnapMerge(iNew, jNew, this.GetCell(iOld, jOld));
 	}
-	IEnumerator DelayedTranslate(Cell cell, float delay)
+	private void DelayedTranslate(Cell cell, float delay)
 	{
 		//delay nó tí
-		Vector2 cachePos= cell.transform.localPosition;
-		cell.transform.localPosition = new Vector2(cachePos.x,cachePos.y + -_height);
-		yield return new WaitForSeconds(delay);
+		Vector2 cachePos = cell.transform.localPosition;
+		cell.transform.localPosition = new Vector2(cachePos.x, cachePos.y + -_height);
 		Destroy(cell.gameObject);
 	}
 	#endregion
