@@ -149,11 +149,11 @@ public class Cell :MonoBehaviour
 	}
 
 	/// <summary>
-	///  thêm ô
+	///  thêm các ô vuông vào cell
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="block"></param>
-	public void AddBlock(GameObject block)
+	public void AddSquare(GameObject block)
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count + 1) / 15f;
@@ -247,13 +247,21 @@ public class Cell :MonoBehaviour
 	/// <summary>
 	/// Clear dữ liệu trong list này đi đồng thời destroy gameobj luôn
 	/// </summary>
-	public void ClearListGameObj()
+	public void ClearAndDestroyListGameObj()
 	{
 		foreach(GameObject gameobj in this.lstBlock)
 		{
 			Destroy(gameobj);
 		}
+		this.ClearListGameObj();
 		// đáng nhẽ sẽ clear list đi nhưng mà do cái này bị trỏ chung vùng nhớ
+	}
+	/// <summary>
+	/// Clear dữ liệu list trong cell này đi
+	/// </summary>
+	public void ClearListGameObj()
+	{
+		this.lstBlock.Clear();
 	}
 	#endregion
 

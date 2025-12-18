@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
 			/// bắt đầu merge
 			foreach (var square in cellMerge.GetListSameTypeFirst(eTypeCache))
 			{
-				CellGrid[i, j].AddBlock(square);
+				CellGrid[i, j].AddSquare(square);
 			}
 			/// sau check 8 ô xung quanh
 			this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
@@ -151,7 +151,7 @@ public class GridManager : MonoBehaviour
 		/// bắt đầu merge
 		foreach (var square in cellMerge.lstBlock)
 		{
-			CellGrid[i, j].AddBlock(square);
+			CellGrid[i, j].AddSquare(square);
 		}
 		// xóa thằng cell bắn này đi
 		Destroy(cellMerge.gameObject);
@@ -171,36 +171,23 @@ public class GridManager : MonoBehaviour
 	}
 	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
 	{
-		Cell topCell = CellGrid[0, col];
-		if (topCell != null)
-		{
-			DelayedTranslate(topCell, 3f);
-		}
-
-		// 2️⃣ Dịch các cell còn lại lên trên
+		// clear dữ liệu trong list cái này đi
+		 CellGrid[0, col].ClearAndDestroyListGameObj();
+		// bắt đầu dịch dữ liệu
 		for (int row = 1; row <= rowIndex; row++)
 		{
-			CellGrid[row - 1, col] = CellGrid[row, col];
-
-			if (CellGrid[row - 1, col] != null)
+			// add dữ liệu block của thằng này sang thằng trước
+			//CellGrid[row - 1, col] = CellGrid[row, col]; 
+			foreach (var square in CellGrid[row, col].lstBlock)
 			{
-				CellGrid[row - 1, col].x = row - 1;
-				CellGrid[row - 1, col].y = col;
-
-				// cập nhật vị trí
-				float posX = col * _width;
-				float posY = (row - 1) * -_height;
-				CellGrid[row - 1, col].transform.localPosition = new Vector2(posX, posY);
-				CellGrid[row - 1, col].SetTextNumberTotalSameType();
+				CellGrid[row - 1, col].AddSquare(square);
 			}
-		}
-		// lúc này thì vị trí thứ [rowindex,coll] sẽ vẫn là giá trị hiện tại
-		// lsuc này thì sẽ xóa bỏ dữ liệu ô hiện tại đi
-		//reset dữ liệu về rỗng
-		this.ClearCell(rowIndex,col);
-		// set lại text
-		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
+			// sau đó sẽ clear cái list đi 
+			CellGrid[row, col].ClearListGameObj();
 
+		}
+		//Cập nhật lại text cho ô cuối
+		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
 	}
 
 	/// <summary>
@@ -265,17 +252,6 @@ public class GridManager : MonoBehaviour
 		bool x = this.GetCell(i -1, j).lstBlock.Count > 0;
 		Debug.Log("giá trị của checknone là:"+x);
 		return this.GetCell(i-1, j).lstBlock.Count > 0;
-	}
-	// reset lại cell
-	public void ClearCell(int i,int j)
-	{
-		this.GetCell(i,j).ClearListGameObj();
-		int xCache = this.GetCell(i, j).x;
-		int yCache=this.GetCell(i, j).y;
-		this.CellGrid[i,j] =new Cell();
-		this.CellGrid[i, j].lstBlock = new List<GameObject>();
-		this.CellGrid[i, j].x = xCache;
-		this.CellGrid[i,j].y = yCache;
 	}
 	#endregion
 	#region funtion IEnumerator
