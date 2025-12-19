@@ -24,15 +24,16 @@ public class UIPopupController : MonoBehaviour
 	private BasePopup UIPopupSetting;
 	#endregion
 
-	// Start is called before the first frame update
-	void Start()
-    {
-        
+	public void ShowWinPopup()
+	{
+		this.UIPopupWin.ShowPopup();
     }
+	/// <summary>
+	/// show popup thua
+	/// </summary>
+	public void ShowLosePopup()
+	{
+		this.UIPopupLose.ShowPopup();
+    }	
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

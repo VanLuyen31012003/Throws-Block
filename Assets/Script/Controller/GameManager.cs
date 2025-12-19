@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 		gridManager.Initialize(levelConfigs[0]);
+        ScoreManager.Instance.SetData(levelConfigs[0]);
         //set up điểm yêu cầu cho setData
         UIManager.Instance.uICoreHub.SetData(levelConfigs[0]);
 	}

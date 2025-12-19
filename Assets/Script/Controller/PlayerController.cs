@@ -56,9 +56,12 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	public void Shoot()
 	{
-		if (Input.GetKeyDown(KeyCode.Q))
+        // Nếu mà nó nhấn phím Q và có thể di chuyển
+        if (Input.GetKeyDown(KeyCode.Q)&&ScoreManager.Instance.IsHaveTurn())
 		{
-			this.frameShoot.currentCell.Move(speed * 100);
+			/// trừ điểm nó đi
+			ScoreManager.Instance.MoveSub();
+            this.frameShoot.currentCell.Move(speed * 100);
 			this.frameShoot.currentCell.gameObject.transform.SetParent(null);
 			this.frameShoot.currentCell=null;
 			/// sinh lại để bắn tiếp

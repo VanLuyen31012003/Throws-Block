@@ -39,40 +39,51 @@ public class TargetPrefapUI : MonoBehaviour
 	#endregion
 
 	#region Public Field
-	#endregion
-
-	#region Function MonoBehaviour
-	//public void Start()
-	//{
-	//	this.GetComponent<Image>().sprite=null;
-	//}
-	#endregion
-
-	#region Function Logic
 	/// <summary>
-	/// hàm cập nhật số lượng và hình ảnh
+	/// type của ô
 	/// </summary>
-	/// <param name="type"></param>
-	/// <param name="numberNeed"></param>
-	public void SetData(ETypeBlock type, int numberNeed)
+	public ETypeBlock Type;
+    #endregion
+
+    #region Function MonoBehaviour
+    //public void Start()
+    //{
+    //	this.GetComponent<Image>().sprite=null;
+    //}
+    #endregion
+
+    #region Function Logic
+    /// <summary>
+    /// hàm cập nhật số lượng và hình ảnh
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="numberNeed"></param>
+    public void SetData(ETypeBlock type, int numberNeed)
 	{
 		this.UIText_NumberNeed.text= numberNeed.ToString();
 		switch (type)
 		{
 			case ETypeBlock.RED:
 				this.GetComponent<Image>().sprite = this.Red;
-				break;
+				this.Type = ETypeBlock.RED;
+                break;
 			case ETypeBlock.GREEN:
 				this.GetComponent<Image>().sprite = this.Green;
-				break;
+                this.Type = ETypeBlock.GREEN;
+                break;
 			case ETypeBlock.YELLOW:
 				this.GetComponent<Image>().sprite = this.Yellow;
-				break;
+                this.Type = ETypeBlock.YELLOW;
+                break;
 			case ETypeBlock.BLUE:
 				this.GetComponent<Image>().sprite = this.Blue;
-				break;
+                this.Type = ETypeBlock.BLUE;
+                break;
 		}
-
 	}
+	public void SetNumberRemainPoint(int totalRemainPoint)
+	{
+		this.UIText_NumberNeed.text = totalRemainPoint.ToString();
+    }	
 	#endregion
 }

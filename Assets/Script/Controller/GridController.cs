@@ -57,14 +57,21 @@ public class GridManager : MonoBehaviour
 	/// </summary>
 	private float _height;
 
-	public int totalSquareWillAdd = 0;
-	#endregion
-
-	#region function logic
+    /// <summary>
+    /// tổng số square sẽ được thêm vào trong lần merge này
+    /// </summary>
+    private int totalSquareWillAdd = 0;
 	/// <summary>
-	/// set up chỉ số
+	/// loại type được add trong lần này
 	/// </summary>
-	public void Initialize(LevelConfig levelConfig)
+	private ETypeBlock typeBlockCache;
+    #endregion
+
+    #region function logic
+    /// <summary>
+    /// set up chỉ số
+    /// </summary>
+    public void Initialize(LevelConfig levelConfig)
 	{
 		this._row = levelConfig.rows;
 		this._col = levelConfig.cols;
@@ -128,10 +135,12 @@ public class GridManager : MonoBehaviour
 			{
 				CellGrid[i, j].AddSquare(square);
 			}
-			/// sau check 8 ô xung quanh
-			this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
+            this.totalSquareWillAdd = CellGrid[i, j].GetTotalSuareSameTypeOntop();
+			this.typeBlockCache = eTypeCache;
+            /// sau check 8 ô xung quanh
+            this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
 		}
-	}
+    }
 	public bool CanMerge(int i, int j, Cell cellNeedCheck)
 	{
 		if (CellGrid[i, j].GetLastSquareType() == cellNeedCheck.GetLastSquareType())
@@ -158,8 +167,17 @@ public class GridManager : MonoBehaviour
 		// lúc này thì CellGrid[i, j] này đã có dữ liệu
 		/// sau check 8 ô xung quanh để merge
 		this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
-		//cuối cùng check nếu nó vẫn còn thì mình sẽ đẩy ô lên
-		if (CellGrid[i, j].lstBlock.Count > 0)
+		/// add điểm xem được không
+		ScoreManager.Instance.AddPoint(this.totalSquareWillAdd, typeBlockCache);
+        if(ScoreManager.Instance.CheckWin())
+		{
+            return;
+        }	
+        // reset tổng số ô add và loại add 
+        this.typeBlockCache = ETypeBlock.NONE;
+        this.totalSquareWillAdd = 0;
+        //cuối cùng check nếu nó vẫn còn thì mình sẽ đẩy ô lên
+        if (CellGrid[i, j].lstBlock.Count > 0)
 		{
 			// chỉ translate khi mà đây là hàng cuối
 			if (i == _row - 1)
@@ -167,8 +185,13 @@ public class GridManager : MonoBehaviour
 				this.TranslateCell(i, j, CellGrid[i, j]);
 			}
 		}
-
-	}
+        // sau khi xong thì sẽ check xem thằng này hết lượt chưa 
+		if(ScoreManager.Instance.IsHaveTurn()==false)
+		{
+            // hết rồi mà vẫn không thắng thì show popup lose luôn
+            ScoreManager.Instance.ShowLose();
+        }
+    }
 	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
 	{
 		// clear dữ liệu trong list cái này đi
@@ -254,6 +277,7 @@ public class GridManager : MonoBehaviour
 		return this.GetCell(i-1, j).lstBlock.Count > 0;
 	}
 	#endregion
+
 	#region funtion IEnumerator
 	private void DelayedMergeAction(int iNew, int jNew, int iOld, int jOld, ETypeBlock type, float delay)
 	{

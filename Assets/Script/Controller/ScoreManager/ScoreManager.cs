@@ -18,13 +18,18 @@ public class ScoreManager : MonoBehaviour
 	/// Yêu cầu của bàn chơi
 	/// </summary>
 	private List<Target> targets;
-	#endregion
 
-	#region public field
-	/// <summary>
-	/// Dữ liệu thông tin điểm số
-	/// </summary>
-	public LevelConfig levelConfig {
+    /// <summary>
+    /// tổng số lượt còn lại trong bàn này
+    /// </summary>
+    private int TotalRemainTurn;
+    #endregion
+
+    #region public field
+    /// <summary>
+    /// Dữ liệu thông tin điểm số
+    /// </summary>
+    public LevelConfig levelConfig {
         get { return this._levelConfig; }
         set { this._levelConfig = value; }
     }
@@ -45,18 +50,95 @@ public class ScoreManager : MonoBehaviour
 	{
 		this._levelConfig = data;
 		this.targets = data.targets;
-	}
+		this.TotalRemainTurn = data.numberInARound;
+    }
 	/// <summary>
-	/// add điểm
+	/// add điểm 
+	/// trả về số ô được cộng thêm
 	/// </summary>
-	public void AddPoint()
+	public int AddPoint(int TotalAdd,ETypeBlock type)
 	{
-
-	}
+		if(type==ETypeBlock.NONE)
+		{
+			return 0;
+        }	
+		int squareAddMore = TotalAdd / 10;
+		if (squareAddMore < 1)
+		{
+			return 0;
+		}
+		int totalReturn= 3 + squareAddMore - 1;
+        // set điểm hco target
+		int totalRemainPoint = 0;
+        foreach (Target target in this.targets)
+		{
+			if((ETypeBlock)target.type == type)
+			{
+				target.countNeed -= TotalAdd;
+				if(target.countNeed < 0)
+				{
+					target.countNeed = 0;
+				}
+                totalRemainPoint= target.countNeed;
+                break;
+			}
+        }
+        // cập nhật lại gjá trị
+        UIManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);
+		Debug.Log("Đã cộng thêm điểm cho target loại "+ type.ToString()+" Số ô cộng thêm là "+ totalReturn);
+        return totalReturn;
+    }
 	public bool IsEnoughToMove()
 	{
 		return false;
-	}	
-	#endregion
+	}
+	/// <summary>
+	/// còn có thể bắn được không 
+	/// </summary>
+	/// <returns></returns>
+	public bool IsHaveTurn()
+	{
+		return this.TotalRemainTurn > 0;
+    }
+    /// <summary>
+    /// Trừ đi một lượt di chuyển
+    /// </summary> 
+    public void MoveSub()
+	{
+		this.TotalRemainTurn -= 1;
+		// cập nhật lại giao diện
+		UIManager.Instance.uICoreHub.SetNumberRemain(this.TotalRemainTurn);	
+    }
+    /// <summary>
+    /// Trừ đi một lượt di chuyển
+    /// </summary> 
+    public int GetNumberTurnRemain()
+    {
+       return this.TotalRemainTurn;
+    }
+	public bool CheckWin()
+	{
+		bool checkWin = true;
+        foreach (Target target in this.targets)
+		{
+			if(target.countNeed > 0)
+			{
+				return false;
+			}
+			checkWin = true;
+        }
+		this.ShowWin();
+        return checkWin;
+	}
+    public void ShowLose()
+    {
+        UIManager.Instance.uIPopupController.ShowLosePopup();
+    }
+    public void ShowWin()
+    {
+        UIManager.Instance.uIPopupController.ShowWinPopup();
+    }
+	
+    #endregion
 
 }

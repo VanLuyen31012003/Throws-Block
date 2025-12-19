@@ -282,7 +282,6 @@ public class Cell :MonoBehaviour
 				/// lấy ra thằng cell mà nó bắn ray cast trúng
 				Cell cellCollison = hit.collider.gameObject.GetComponent<Cell>();
 			
-				Debug.LogWarning("giá trị của ô này: " + cellCollison.x + ":" + cellCollison.y);
 				// keiemr trả xem ô phía trên ô bắn tia ray trúng đang có dữ liệu không, nếu có thì gọi hàm merge, khôn thì bay tiếp
 				if(GameManager.Instance.GridManager.CheckNone(cellCollison.x, cellCollison.y))
 				{

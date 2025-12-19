@@ -14,8 +14,7 @@ public class UIManager : MonoBehaviour
 	/// <summary>
 	/// quản lý popup
 	/// </summary>
-	[SerializeField]
-	private UIPopupController uIPopupController;
+	public UIPopupController uIPopupController;
 
 	/// <summary>
 	/// quản lý corehub
