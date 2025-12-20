@@ -57,7 +57,8 @@ public class PlayerController : MonoBehaviour
 	public void Shoot()
 	{
         // Nếu mà nó nhấn phím Q và có thể di chuyển
-        if (Input.GetKeyDown(KeyCode.Q)&&ScoreManager.Instance.IsHaveTurn())
+        if (Input.GetKeyDown(KeyCode.Q))
+			if(ScoreManager.Instance.IsHaveTurn())
 		{
 			/// trừ điểm nó đi
 			ScoreManager.Instance.MoveSub();

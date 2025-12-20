@@ -56,7 +56,7 @@ public class FrameShoot : MonoBehaviour
 	{
 		this.currentCell = Instantiate(this.cell, transform);
 		this.currentCell.gameObject.SetActive(true);
-		this.ETypeBlockRandom = (ETypeBlock)UnityEngine.Random.Range(1, 4);
+		this.ETypeBlockRandom = (ETypeBlock)UnityEngine.Random.Range(1, 5);
 		this.count = UnityEngine.Random.Range(1, 8);
 		Debug.Log("random ra giá trị:" + (int)ETypeBlockRandom + count);
 		this.currentCell.SpawnBlock(ETypeBlockRandom, count);

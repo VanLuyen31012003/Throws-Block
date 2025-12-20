@@ -197,6 +197,7 @@ public class Cell :MonoBehaviour
 	/// <summary>
 	/// Lấy ra tất cả các suqare block có cùng kiểu ở đầu
 	/// Lấy ra xong rồi cũng xóa nó luôn trong list của cell hiện tại nhé
+	/// Còn nếu chỉ muốn lấy ra list thì set cái isGetCount về true;
 	/// </summary>
 	/// <param name="type"></param>
 	/// <returns></returns>
@@ -262,6 +263,28 @@ public class Cell :MonoBehaviour
 	public void ClearListGameObj()
 	{
 		this.lstBlock.Clear();
+	}
+	/// <summary>
+	/// Clear các square có cùng type ở đầu
+	/// </summary>
+	public void ClearListSquareHaveSameTypeOnTop()
+	{
+		ETypeBlock type = this.GetLastSquareType();
+
+		for (int i = this.lstBlock.Count - 1; i >= 0; i--)
+		{
+			if (this.lstBlock[i].GetComponent<Square>().typeBlock == type)
+			{
+				/// xóa square đó
+				Destroy(this.lstBlock[i]);
+				/// sau đó xóa đối tượng square đó trong lstBlock
+				lstBlock.RemoveAt(i);
+
+			}
+			else
+				break;
+		}
+		this.SetTextNumberTotalSameType();
 	}
 	#endregion
 
