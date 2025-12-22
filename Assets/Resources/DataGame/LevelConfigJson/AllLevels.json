@@ -1,0 +1,739 @@
+﻿{
+  "levels": [
+    {
+      "level": 1,
+      "rows": 6,
+      "cols": 6,
+      "numberInARound": 15,
+      "targets": [
+        {
+          "type": 1,
+          "countNeed": 3
+        },
+        {
+          "type": 2,
+          "countNeed": 3
+        },
+        {
+          "type": 3,
+          "countNeed": 3
+        },
+        {
+          "type": 4,
+          "countNeed": 6
+        }
+      ],
+      "cellDataConfigs": [
+        {
+          "row": 0,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 3,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 2
+            }
+          ]
+        },
+
+        {
+          "row": 5,
+          "column": 0,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 5,
+          "column": 4,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 5,
+          "column": 5,
+          "squareBoxDataConfigs": []
+        }
+      ]
+    },
+
+    {
+      "level": 2,
+      "rows": 7,
+      "cols": 7,
+      "numberInARound": 12,
+      "targets": [
+        {
+          "type": 1,
+          "countNeed": 25
+        },
+        {
+          "type": 2,
+          "countNeed": 20
+        },
+        {
+          "type": 3,
+          "countNeed": 15
+        },
+        {
+          "type": 4,
+          "countNeed": 12
+        }
+      ],
+      "cellDataConfigs": [
+        {
+          "row": 0,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 1
+            },
+            {
+              "type": 3,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 4,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 2
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 6,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 1
+            }
+          ]
+        },
+
+        {
+          "row": 1,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 1
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 1,
+          "column": 6,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 2
+            }
+          ]
+        },
+
+        {
+          "row": 3,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 3
+            },
+            {
+              "type": 4,
+              "count": 2
+            }
+          ]
+        },
+
+        {
+          "row": 6,
+          "column": 0,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 1,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 2,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 3,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 4,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 5,
+          "squareBoxDataConfigs": []
+        },
+        {
+          "row": 6,
+          "column": 6,
+          "squareBoxDataConfigs": []
+        }
+      ]
+    },
+
+    {
+      "level": 3,
+      "rows": 6,
+      "cols": 8,
+      "numberInARound": 15,
+      "targets": [
+        {
+          "type": 1,
+          "countNeed": 30
+        },
+        {
+          "type": 2,
+          "countNeed": 25
+        },
+        {
+          "type": 3,
+          "countNeed": 20
+        },
+        {
+          "type": 4,
+          "countNeed": 18
+        }
+      ],
+      "cellDataConfigs": [
+        {
+          "row": 0,
+          "column": 0,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 2
+            },
+            {
+              "type": 2,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 0,
+          "column": 7,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 2
+            },
+            {
+              "type": 4,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 3
+            }
+          ]
+        },
+        {
+          "row": 2,
+          "column": 5,
+          "squareBoxDataConfigs": [
+            {
+              "type": 2,
+              "count": 3
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "squareBoxDataConfigs": [
+            {
+              "type": 1,
+              "count": 4
+            }
+          ]
+        },
+        {
+          "row": 4,
+          "column": 6,
+          "squareBoxDataConfigs": [
+            {
+              "type": 3,
+              "count": 3
+            }
+          ]
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "squareBoxDataConfigs": [
+            {
+              "type": 4,
+              "count": 2
+            },
+            {
+              "type": 1,
+              "count": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -38,6 +38,7 @@ public class UICoreHub : MonoBehaviour
     #region Function Logic
     public void SetData(LevelConfig data)
 	{
+		this.Clear();
 		this.NumberRemain.text=data.numberInARound.ToString();
 		foreach(Target target in data.targets)
 		{
@@ -80,6 +81,23 @@ public class UICoreHub : MonoBehaviour
     {
         this.NumberRemain.text = totalNumberTurnRemaint.ToString();	
     }
+	public void Clear()
+	{
+		// Reset số lượt
+		if (NumberRemain != null)
+			NumberRemain.text = "0";
 
-    #endregion
+		// Destroy toàn bộ target UI đang tồn tại
+		for (int i = listTargetUI.Count - 1; i >= 0; i--)
+		{
+			if (listTargetUI[i] != null)
+			{
+				Destroy(listTargetUI[i].gameObject);
+			}
+		}
+
+		// Clear list quản lý
+		listTargetUI.Clear();
+	}
+	#endregion
 }

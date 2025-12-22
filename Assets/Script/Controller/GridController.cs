@@ -69,6 +69,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     public void Initialize(LevelConfig levelConfig)
 	{
+		this.ClearGrid();
 		this._row = levelConfig.rows;
 		this._col = levelConfig.cols;
 		this.CellGrid = new Cell[_row, _col];
@@ -99,7 +100,7 @@ public class GridManager : MonoBehaviour
 				CellGrid[i, j].x = i;
 				CellGrid[i, j].y = j;
 				// nếu nó có dữ liệu
-				if (this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count >= 1)
+				if (this.levelConfig.cellDataConfigs.Count> countIndex && this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count >= 1)
 				{
 					foreach (var dataInCell in this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs)
 					{
@@ -116,33 +117,26 @@ public class GridManager : MonoBehaviour
 		}
 		this.transform.position = new Vector2(-1.9f, 3);
 	}
-
 	/// <summary>
-	/// Xử lý merge ô bắn từ slide lên
+	///  Hàm này sẽ merge các ô, đối số của hàm là path đường đi cả type 
 	/// </summary>
-	public void SnapMerge(int i, int j, Cell cellMerge)
+	/// <param name="path"></param>
+	/// <param name="type"></param>
+	private void MergeByPath(List<Cell> path, ETypeBlock type)
 	{
-		// nếu nó cùng loại thì merge hoặc ô này chưa có cái nào
-		ETypeBlock eTypeCache = cellMerge.GetLastSquareType();
-		if (CellGrid[i, j].GetLastSquareType() == eTypeCache || CellGrid[i, j].GetLastSquareType() == ETypeBlock.NONE)
+		// nếu đường đi chỉ có chính nó thì out luôn tại k còn thg nào merge đc
+		if (path.Count < 2) return;
+
+		for (int i = 0; i < path.Count - 1; i++)
 		{
-			/// bắt đầu merge
-			foreach (var square in cellMerge.GetListSameTypeFirst(eTypeCache))
+			Cell from = path[i];
+			Cell to = path[i + 1];
+
+			foreach (var square in from.GetListSameTypeFirst(type))
 			{
-				CellGrid[i, j].AddSquare(square);
+				to.AddSquare(square);
 			}
-			this.CurrentCellLast = CellGrid[i, j];
-			/// sau check 8 ô xung quanh
-			this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
 		}
-    }
-	public bool CanMerge(int i, int j, Cell cellNeedCheck)
-	{
-		if (CellGrid[i, j].GetLastSquareType() == cellNeedCheck.GetLastSquareType())
-		{
-			return true;
-		}
-		return false;
 	}
 	/// <summary>
 	///  hàm này sẽ để merge ô bắn từ slide lên
@@ -160,11 +154,15 @@ public class GridManager : MonoBehaviour
 		this.CurrentCellLast= CellGrid[i, j];
 		// xóa thằng cell bắn này đi
 		Destroy(cellMerge.gameObject);
-		// lúc này thì CellGrid[i, j] này đã có dữ liệu
-		/// sau check 8 ô xung quanh để merge
-		this.CheckMergeAround(i, j, this.GetCell(i, j).GetLastSquareType());
+		/// dùng bfs để lấy ra được list đường đi có thể add
+		List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
+		// nếu có thể merge	
+		if(path.Count>=2)
+		{
+			this.CurrentCellLast = path[path.Count - 1];
+			this.MergeByPath(path, CellGrid[i, j].GetLastSquareType());
+		}
 		/// add điểm xem được không
-
 		this.AddPoint();
 		if(ScoreManager.Instance.CheckWin())
 		{
@@ -208,39 +206,6 @@ public class GridManager : MonoBehaviour
 		//Cập nhật lại text cho ô cuối
 		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
 	}
-
-	/// <summary>
-	/// Check 8 ô xung quanh xem có ô nào có phần tử đầu giống với cái hiện tại vừa add không
-	/// </summary>
-	public void CheckMergeAround(int i, int j, ETypeBlock typeBlock)
-	{
-		/// Hàng 1 ô đầu
-		if (this.GetCell(i - 1, j - 1) != null && this.GetCell(i - 1, j - 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i - 1, j - 1, i, j, typeBlock);
-		/// Hàng 1 ô 2
-		else if (this.GetCell(i - 1, j) != null && this.GetCell(i - 1, j).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i - 1, j, i, j, typeBlock);
-		/// Hàng 1 ô 3
-		else if (this.GetCell(i - 1, j + 1) != null && this.GetCell(i - 1, j + 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i - 1, j + 1, i, j, typeBlock);
-		/// Hàng 2 ô đầu
-		else if (this.GetCell(i, j - 1) != null && this.GetCell(i, j - 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i, j - 1, i, j, typeBlock);
-		/// Hàng 2 ô 3
-		else if (this.GetCell(i, j + 1) != null && this.GetCell(i, j + 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i, j + 1, i, j, typeBlock);
-		/// Hàng 3 ô đầu
-		else if (this.GetCell(i + 1, j - 1) != null && this.GetCell(i + 1, j - 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i + 1, j - 1, i, j, typeBlock);
-		/// Hàng 3 ô 2
-		else if (this.GetCell(i + 1, j) != null && this.GetCell(i + 1, j).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i + 1, j, i, j, typeBlock);
-		/// Hàng 3 ô 3
-		else if (this.GetCell(i + 1, j + 1) != null && this.GetCell(i + 1, j + 1).CheckMergeCondition(typeBlock))
-			this.PrepareMerge(i + 1, j + 1, i, j, typeBlock);
-
-	}
-
 	/// <summary>
 	/// Hàm lấy ra ô hiện tại mà k gây lỗi 
 	/// </summary>
@@ -254,16 +219,6 @@ public class GridManager : MonoBehaviour
 			return null;
 		}
 		return this.CellGrid[i, j];
-	}
-	/// <summary>
-	/// Hàm này tách đoạn merge to snap ra 1 hàm riêng để CheckMergeAround đỡ dài
-	/// </summary>
-	/// <param name="i"></param>
-	/// <param name="j"></param>
-	private void PrepareMerge(int iNew, int jNew, int iOld, int jOld, ETypeBlock type)
-	{
-		// Bắt đầu Coroutine, Coroutine này sẽ chờ 0.5 giây trước khi chạy logic merge để tạo cảm giác từ từ
-		DelayedMergeAction(iNew, jNew, iOld, jOld, type, 0.1f);
 	}
 	// hàm trả về cell trên ô hiện tại có đang không có phần tử nào không
 	public bool CheckNone(int i, int j)
@@ -332,19 +287,73 @@ public class GridManager : MonoBehaviour
 			this.AddPoint();
 		}
 	}
-	#endregion
+	/// <summary>
+	/// Clear toàn bộ dữ liệu grid để chuẩn bị build level mới
+	/// </summary>
+	public void ClearGrid()
+	{
+		if (CellGrid != null)
+		{
+			for (int i = 0; i < _row; i++)
+			{
+				for (int j = 0; j < _col; j++)
+				{
+					if (CellGrid[i, j] != null)
+					{
+						// clear toàn bộ block bên trong cell
+						CellGrid[i, j].ClearAndDestroyListGameObj();
 
-	#region funtion IEnumerator
-	private void DelayedMergeAction(int iNew, int jNew, int iOld, int jOld, ETypeBlock type, float delay)
-	{
-		this.SnapMerge(iNew, jNew, this.GetCell(iOld, jOld));
+						// destroy cell object
+						Destroy(CellGrid[i, j].gameObject);
+						CellGrid[i, j] = null;
+					}
+				}
+			}
+			// clear background + cell còn sót trong hierarchy
+			for (int i = this.transform.childCount - 1; i >= 0; i--)
+			{
+				Destroy(transform.GetChild(i).gameObject);
+			}
+			// reset dữ liệu
+			CellGrid = null;
+			_row = 0;
+			_col = 0;
+			_width = 0;
+			_height = 0;
+			CurrentCellLast = null;
+			levelConfig = null;
+		}
 	}
-	private void DelayedTranslate(Cell cell, float delay)
+	/// <summary>
+	/// Lấy danh sách các cell xung quanh (8 hướng) có thể merge được
+	/// </summary>
+	public List<Cell> GetMergeableAroundCells(Cell center, ETypeBlock type)
 	{
-		//delay nó tí
-		Vector2 cachePos = cell.transform.localPosition;
-		cell.transform.localPosition = new Vector2(cachePos.x, cachePos.y + -_height);
-		Destroy(cell.gameObject);
+		List<Cell> result = new List<Cell>();
+		int cx = center.x;
+		int cy = center.y;
+		for (int dx = -1; dx <= 1; dx++)
+		{
+			for (int dy = -1; dy <= 1; dy++)
+			{
+				// bỏ qua chính nó
+				if (dx == 0 && dy == 0)
+					continue;
+
+				Cell neighbor = GetCell(cx + dx, cy + dy);
+
+				if (neighbor == null)
+					continue;
+
+				// điều kiện merge
+				if (neighbor.CheckMergeCondition(type))
+				{
+					result.Add(neighbor);
+				}
+			}
+		}
+
+		return result;
 	}
 	#endregion
 }

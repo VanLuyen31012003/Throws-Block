@@ -127,6 +127,8 @@ public class ScoreManager : MonoBehaviour
 			}
 			checkWin = true;
         }
+		// win rồi thì update level
+		LevelManager.Instance.UpdateLevel();
 		this.ShowWin();
         return checkWin;
 	}

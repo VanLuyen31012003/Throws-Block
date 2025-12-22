@@ -10,7 +10,7 @@ public class BasePopup : MonoBehaviour
     }
 	public virtual void HidePopup()
 	{
-		this.gameObject.SetActive(true);
+		this.gameObject.SetActive(false);
 	}
 }
 
