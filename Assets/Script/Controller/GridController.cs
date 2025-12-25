@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -146,46 +147,136 @@ public class GridManager : MonoBehaviour
 	/// <param name="cellMerge"></param>
 	public void MergeToNoneBlock(int i, int j, Cell cellMerge)
 	{
-		/// bắt đầu merge
-		foreach (var square in cellMerge.lstBlock)
+		Sequence seq = DOTween.Sequence();
+
+		List<GameObject> squaresToMove = new List<GameObject>(cellMerge.lstBlock);
+		cellMerge.lstBlock.Clear();
+
+		foreach (var sq in squaresToMove)
 		{
-			CellGrid[i, j].AddSquare(square);
-		}
-		this.CurrentCellLast= CellGrid[i, j];
-		// xóa thằng cell bắn này đi
-		Destroy(cellMerge.gameObject);
-		/// dùng bfs để lấy ra được list đường đi có thể add
-		List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
-		// nếu có thể merge	
-		if(path.Count>=2)
-		{
-			this.CurrentCellLast = path[path.Count - 1];
-			this.MergeByPath(path, CellGrid[i, j].GetLastSquareType());
-		}
-		/// add điểm xem được không
-		this.AddPoint();
-		if(ScoreManager.Instance.CheckWin())
-		{
-            return;
-        }
-		// reset lại current cell las
-		this.CurrentCellLast = null;
-        //cuối cùng check nếu nó vẫn còn thì mình sẽ đẩy ô lên
-        if (CellGrid[i, j].lstBlock.Count > 0)
-		{
-			// chỉ translate khi mà đây là hàng cuối
-			if (i == _row - 1)
+			var square = sq; 
+			square.transform.SetParent(null);
+			seq.Append(
+				square.transform
+					.DOMove(CellGrid[i, j].transform.position, 0.2f)
+					.SetEase(Ease.OutQuad)
+			);
+
+			seq.Join(
+				square.transform
+					.DOScale(1.3f, 0.1f)
+					.SetEase(Ease.OutBack)
+			);
+
+			seq.Append(
+				square.transform
+					.DOScale(1f, 0.1f)
+			);
+
+			seq.AppendCallback(() =>
 			{
-				this.TranslateCell(i, j, CellGrid[i, j]);
+				CellGrid[i, j].AddSquare(square);
+			});
+		}
+
+		// destroy cell bắn lên (chỉ còn animation)
+		Destroy(cellMerge.gameObject);
+
+		seq.OnComplete(() =>
+		{
+			List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
+
+			if (path.Count >= 2)
+			{
+				CurrentCellLast = path[path.Count - 1];
+
+				Sequence mergePathSeq = MergeByPathAnim(
+					path,
+					CellGrid[i, j].GetLastSquareType()
+				);
+
+				mergePathSeq.OnComplete(() =>
+				{
+					AfterAllMergeDone(i, j);
+				});
+			}
+			else
+			{
+				AfterAllMergeDone(i, j);
+			}
+		});
+	}
+	private Sequence MergeByPathAnim(List<Cell> path, ETypeBlock type)
+	{
+		Sequence seq = DOTween.Sequence();
+
+		if (path.Count < 2)
+			return seq;
+
+		for (int i = 0; i < path.Count - 1; i++)
+		{
+			Cell from = path[i];
+			Cell to = path[i + 1];
+
+			List<GameObject> squares =
+				from.GetListSameTypeFirst(type);
+
+			foreach (var sq in squares)
+			{
+				var square = sq;
+
+				square.transform.SetParent(null);
+
+				seq.Append(
+					square.transform
+						.DOMove(to.transform.position, 0.25f)
+						.SetEase(Ease.OutQuad)
+				);
+
+				seq.Join(
+					square.transform
+						.DOScale(1.3f, 0.12f)
+						.SetEase(Ease.OutBack)
+				);
+
+				seq.Append(
+					square.transform
+						.DOScale(1f, 0.1f)
+				);
+
+				seq.AppendCallback(() =>
+				{
+					//from.lstBlock.Remove(square); // xóa khỏi cell cũ
+					to.AddSquare(square);          // add vào cell mới
+				});
 			}
 		}
-        // sau khi xong thì sẽ check xem thằng này hết lượt chưa 
-		if(ScoreManager.Instance.IsHaveTurn()==false)
+
+		return seq;
+	}
+	private void AfterAllMergeDone(int i, int j)
+	{
+		AddPoint();
+
+		if (ScoreManager.Instance.CheckWin())
+			return;
+
+		CurrentCellLast = null;
+
+		// dịch ô nếu cần
+		if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
 		{
-            // hết rồi mà vẫn không thắng thì show popup lose luôn
-            ScoreManager.Instance.ShowLose();
-        }
-    }
+			TranslateCell(i, j, CellGrid[i, j]);
+		}
+
+		// hết lượt
+		if (!ScoreManager.Instance.IsHaveTurn())
+		{
+			ScoreManager.Instance.ShowLose();
+		}
+	}
+
+
 	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
 	{
 		// clear dữ liệu trong list cái này đi

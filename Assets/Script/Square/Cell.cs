@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -314,6 +315,29 @@ public class Cell :MonoBehaviour
 				}
 			}
 		}
+	}
+	public void JumpSquareToCell(GameObject square, Cell targetCell, int order)
+	{
+		square.transform.SetParent(null); // tạm thời tách ra
+
+		Vector3 startPos = square.transform.position;
+
+		// vị trí đích dựa theo số block hiện có
+		Vector3 targetPos = targetCell.transform.position +
+			Vector3.up * ((targetCell.lstBlock.Count + 1) / 15f);
+
+		float duration = 0.25f;
+		float delay = order * 0.05f;
+
+		square.transform
+			.DOJump(targetPos, 0.6f, 1, duration)
+			.SetDelay(delay)
+			.SetEase(Ease.OutQuad)
+			.OnComplete(() =>
+			{
+				// khi nhảy xong mới add vào cell
+				targetCell.AddSquare(square);
+			});
 	}
 	#endregion
 }
