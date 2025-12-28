@@ -158,9 +158,8 @@ public class Cell :MonoBehaviour
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count + 1) / 15f;
-		block.transform.localPosition = new Vector2(0, y);
+		block.transform.localPosition = new Vector3(0, y);
 		block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
-		block.SetActive(true);
 		lstBlock.Add(block);
 		this.SetTextNumberTotalSameType();
 	}
@@ -338,6 +337,30 @@ public class Cell :MonoBehaviour
 				// khi nhảy xong mới add vào cell
 				targetCell.AddSquare(square);
 			});
+	}
+	// trả về vị trí nên xếp
+	public Vector3 GetNextSquareWorldPos()
+	{
+		float offsetY = 0.15f; // khoảng cách xếp chồng
+		return transform.position + Vector3.up * lstBlock.Count * offsetY;
+	}
+	/// <summary>
+	/// Lấy ra thứ tự sorting layer nên set
+	/// </summary>
+	/// <returns></returns>
+	public int GetSlotSortingLayer( int indexSquare)
+	{
+		return this.lstBlock.Count+ indexSquare;
+	}
+	/// <summary>
+	/// Trả về vị trí để merge anim
+	/// </summary>
+	/// <returns></returns>
+	public Vector3 GetPostionMove(int indexSquare)
+	{
+		Vector3 pos = this.transform.position;
+		pos.y = (float)(lstBlock.Count + indexSquare) / 15f;
+		return pos;
 	}
 	#endregion
 }
