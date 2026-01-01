@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -98,6 +99,22 @@ public class UICoreHub : MonoBehaviour
 
 		// Clear list quản lý
 		listTargetUI.Clear();
+	}
+	public Vector3 GetPositionSquareMission(ETypeBlock type)
+	{
+		if (listTargetUI.Any(x => x.Type == type))
+			return this.UIToWorldPosition(listTargetUI.Where(x=>x.Type==type).FirstOrDefault().GetComponent<RectTransform>());
+		return Vector3.zero;
+	}
+	public Vector3 UIToWorldPosition(RectTransform uiRect)
+	{
+		// truyển tử ui sang screen
+		Vector3 screenPos =RectTransformUtility.WorldToScreenPoint(null, uiRect.position);
+		// truyển lại từ screen sang world point
+		Vector3 worldPos =Camera.main.ScreenToWorldPoint(screenPos);
+		worldPos.z = 0; 
+
+		return worldPos;
 	}
 	#endregion
 }

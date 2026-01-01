@@ -240,24 +240,24 @@ public class GridManager : MonoBehaviour
 	}
 	private void AfterAllMergeDone(int i, int j)
 	{
-		AddPoint();
+		AddPoint(() => {
+			if (ScoreManager.Instance.CheckWin())
+				return;
 
-		if (ScoreManager.Instance.CheckWin())
-			return;
+			CurrentCellLast = null;
 
-		CurrentCellLast = null;
+			// dịch ô nếu cần
+			if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
+			{
+				TranslateCell(i, j, CellGrid[i, j]);
+			}
 
-		// dịch ô nếu cần
-		if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
-		{
-			TranslateCell(i, j, CellGrid[i, j]);
-		}
-
-		// hết lượt
-		if (!ScoreManager.Instance.IsHaveTurn())
-		{
-			ScoreManager.Instance.ShowLose();
-		}
+			// hết lượt
+			if (!ScoreManager.Instance.IsHaveTurn())
+			{
+				ScoreManager.Instance.ShowLose();
+			}
+		});	
 	}
 
 
@@ -329,38 +329,72 @@ public class GridManager : MonoBehaviour
 	/// <summary>
 	/// Hàm này sẽ thực hiện việc gọi cộng điểm liên kết với score manager
 	/// </summary>
-	private void AddPoint()
+	private void AddPoint(Action actionCb)
 	{
-		int point = ScoreManager.Instance.AddPoint(this.CurrentCellLast.GetTotalSuareSameTypeOntop(), this.CurrentCellLast.GetLastSquareType());
+		ETypeBlock typeTop = this.CurrentCellLast.GetLastSquareType();
+		int point = ScoreManager.Instance.AddPoint(this.CurrentCellLast.GetTotalSuareSameTypeOntop(), typeTop,out int totalRemainPoint);
 		// kiểm tra xe ô cuối lớn hơn không thì tức là nó đủ đk xóa rồi
 		if (point > 0)
 		{
-			// lấy ra 1 ô trong grid đang có cùng type và số lượng nhiều nhất
-			Cell cellCache = this.GetCellAddMoreInGrid(this.CurrentCellLast.GetLastSquareType(), this.CurrentCellLast.x, this.CurrentCellLast.y);
-			// nếu mà không còn ô nào cùng loại thì clear đi
-			if (cellCache == null)
+			Sequence sq = DOTween.Sequence();
+			this.CurrentCellLast.SetVisibleTextNumberTotalSameType(false);
+			Vector3 positionPlayAnim= UIManager.Instance.uICoreHub.GetPositionSquareMission(typeTop);
+			if(positionPlayAnim==Vector3.zero)
 			{
-				Debug.Log("Vào logic add point xóa tất cả vì k tìm thấy thằng nào ");
+				// thực thi hiệu ứng scale xuống
+				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
+				{
+					sq.Append(square.transform.DOScale(0f, 0.2f).SetEase(Ease.OutQuad));
+				}
+			}
+			else
+			{
+				// thực thi hiệu ứng scale xuống và move về thanh nhiệm vụ
+				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
+				{
+					// vừa move vừa scale xuống
+					sq.Append(square.transform.DOMove(positionPlayAnim, 0.2f).SetEase(Ease.OutQuad));
+					sq.Join(square.transform.DOScale(0f, 0.2f).SetEase(Ease.OutQuad));
+				}
+			}		
+			sq.OnComplete(() => {
+				// cập nhật lại gjá trị nhiệm vụ
+				UIManager.Instance.uICoreHub.SetTargetItem(typeTop, totalRemainPoint);
+				// lấy ra 1 ô trong grid đang có cùng type và số lượng nhiều nhất
+				Cell cellCache = this.GetCellAddMoreInGrid(this.CurrentCellLast.GetLastSquareType(), this.CurrentCellLast.x, this.CurrentCellLast.y);
+				// nếu mà không còn ô nào cùng loại thì clear đi
+				if (cellCache == null)
+				{
+					Debug.Log("Vào logic add point xóa tất cả vì k tìm thấy thằng nào ");
+					this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
+					this.CurrentCellLast.SetTextNumberTotalSameType();
+					return;
+				}
+				/// bắt đầu merge
+				int iCheck = 0;
+				foreach (var square in CurrentCellLast.GetListSameTypeFirst(CurrentCellLast.GetLastSquareType(), true))
+				{
+					iCheck++;
+					// add đủ thì xong 
+					if (iCheck > point)
+						break;
+					cellCache.AddSquare(square);
+					// để tạm như này sau có thời gian sẽ  viết tối ưu lại
+					CurrentCellLast.lstBlock.Remove(square);
+				}
 				this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
-				return;
-			}
-			/// bắt đầu merge
-			int iCheck = 0;
-			foreach (var square in CurrentCellLast.GetListSameTypeFirst(CurrentCellLast.GetLastSquareType(),true))
-			{
-				iCheck++;
-				// add đủ thì xong 
-				if(iCheck>point)
-					break;
-				cellCache.AddSquare(square);
-				// để tạm như này sau có thời gian sẽ  viết tối ưu lại
-				CurrentCellLast.lstBlock.Remove(square);
-			}
-			this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
-			/// set lại thằng CurrentCellLast = chính thằng vừa add rồi đệ quy lại addpoint này để xem có ăn không
-			this.CurrentCellLast = cellCache;
-			this.AddPoint();
+				this.CurrentCellLast.SetTextNumberTotalSameType();
+				/// set lại thằng CurrentCellLast = chính thằng vừa add rồi đệ quy lại addpoint này để xem có ăn không
+				this.CurrentCellLast = cellCache;
+				this.AddPoint(actionCb);
+			});	
 		}
+		/// nếu không còn add được gì nữa thì sẽ gọi cb check  lại
+		else
+		{
+			actionCb?.Invoke();
+		}
+
 	}
 	/// <summary>
 	/// Clear toàn bộ dữ liệu grid để chuẩn bị build level mới

@@ -56,9 +56,10 @@ public class ScoreManager : MonoBehaviour
 	/// add điểm 
 	/// trả về số ô được cộng thêm
 	/// </summary>
-	public int AddPoint(int TotalAdd,ETypeBlock type)
+	public int AddPoint(int TotalAdd,ETypeBlock type, out int totalRemainPoint)
 	{
-		if(type==ETypeBlock.NONE)
+		totalRemainPoint = 0;
+		if (type==ETypeBlock.NONE)
 		{
 			return 0;
         }	
@@ -69,7 +70,6 @@ public class ScoreManager : MonoBehaviour
 		}
 		int totalReturn= 3 + squareAddMore - 1;
         // set điểm hco target
-		int totalRemainPoint = 0;
         foreach (Target target in this.targets)
 		{
 			if((ETypeBlock)target.type == type)
@@ -83,8 +83,8 @@ public class ScoreManager : MonoBehaviour
                 break;
 			}
         }
-        // cập nhật lại gjá trị
-        UIManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);
+        //// cập nhật lại gjá trị
+        //UIManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);
 		Debug.Log("Đã cộng thêm điểm cho target loại "+ type.ToString()+" Số ô cộng thêm là "+ totalReturn);
         return totalReturn;
     }

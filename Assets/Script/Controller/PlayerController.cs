@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 		{
 			/// trừ điểm nó đi
 			ScoreManager.Instance.MoveSub();
-            this.frameShoot.currentCell.Move(speed * 100);
+            this.frameShoot.currentCell.Move(speed * 300);
 			this.frameShoot.currentCell.gameObject.transform.SetParent(null);
 			this.frameShoot.currentCell=null;
 			/// sinh lại để bắn tiếp

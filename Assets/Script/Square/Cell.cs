@@ -135,7 +135,8 @@ public class Cell :MonoBehaviour
 	{
 		//this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 		// tức là nó đang rỗng
-		if(lstBlock.Count<=0)
+		this.TotalNumberSquareTopSameType.gameObject.SetActive(true);
+		if (lstBlock.Count<=0)
 		{
 			this.TotalNumberSquareTopSameType.text = "+";
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = this.transform.position;
@@ -147,6 +148,10 @@ public class Cell :MonoBehaviour
 		}
 		this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
 
+	}
+	public void SetVisibleTextNumberTotalSameType(bool value)
+	{
+		this.TotalNumberSquareTopSameType.gameObject.SetActive(value);	
 	}
 
 	/// <summary>
@@ -217,8 +222,10 @@ public class Cell :MonoBehaviour
 				break;
 		}
 		if(!isGetCount)
-			this.lstBlock.RemoveRange(indexRemove,list.Count);
-		this.SetTextNumberTotalSameType();
+		{
+			this.lstBlock.RemoveRange(indexRemove, list.Count);
+			this.SetTextNumberTotalSameType();
+		}		
 		return list;
 	}
 	/// <summary>
