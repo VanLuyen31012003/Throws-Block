@@ -144,18 +144,6 @@ public class GridManager : MonoBehaviour
 					.DOMove(CellGrid[i, j].transform.position, 0.15f)
 					.SetEase(Ease.OutQuad)
 			);
-
-			//seq.Join(
-			//	square.transform
-			//		.DOScale(1.3f, 0.1f)
-			//		.SetEase(Ease.OutBack)
-			//);
-
-			//seq.Append(
-			//	square.transform
-			//		.DOScale(1f, 0.1f)
-			//);
-
 			seq.AppendCallback(() =>
 			{
 				CellGrid[i, j].AddSquare(square);
@@ -358,10 +346,11 @@ public class GridManager : MonoBehaviour
 				}
 			}		
 			sq.OnComplete(() => {
-				// cập nhật lại gjá trị nhiệm vụ
-				UIManager.Instance.uICoreHub.SetTargetItem(typeTop, totalRemainPoint);
+                this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
+                // cập nhật lại gjá trị nhiệm vụ
+                UIManager.Instance.uICoreHub.SetTargetItem(typeTop, totalRemainPoint);
 				// lấy ra 1 ô trong grid đang có cùng type và số lượng nhiều nhất
-				Cell cellCache = this.GetCellAddMoreInGrid(this.CurrentCellLast.GetLastSquareType(), this.CurrentCellLast.x, this.CurrentCellLast.y);
+				Cell cellCache = this.GetCellAddMoreInGrid(typeTop, this.CurrentCellLast.x, this.CurrentCellLast.y);
 				// nếu mà không còn ô nào cùng loại thì clear đi
 				if (cellCache == null)
 				{
@@ -370,23 +359,43 @@ public class GridManager : MonoBehaviour
 					this.CurrentCellLast.SetTextNumberTotalSameType();
 					return;
 				}
-				/// bắt đầu merge
-				int iCheck = 0;
-				foreach (var square in CurrentCellLast.GetListSameTypeFirst(CurrentCellLast.GetLastSquareType(), true))
+				Sequence sequenceMove =DOTween.Sequence();
+				Cell cellPosAdd = this.SpawnGameObj(typeTop, point, this.CurrentCellLast);
+                List<GameObject> lstGameObt = new List<GameObject>();
+                lstGameObt=cellPosAdd.lstBlock;
+				lstGameObt.Reverse();
+                foreach (var square in lstGameObt)
 				{
-					iCheck++;
-					// add đủ thì xong 
-					if (iCheck > point)
-						break;
-					cellCache.AddSquare(square);
-					// để tạm như này sau có thời gian sẽ  viết tối ưu lại
-					CurrentCellLast.lstBlock.Remove(square);
-				}
-				this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
-				this.CurrentCellLast.SetTextNumberTotalSameType();
-				/// set lại thằng CurrentCellLast = chính thằng vừa add rồi đệ quy lại addpoint này để xem có ăn không
-				this.CurrentCellLast = cellCache;
-				this.AddPoint(actionCb);
+					Vector2 posCache = square.transform.position;
+					posCache.y=posCache.y+0.6f;
+					sequenceMove.Join(square.transform.DOMove(posCache, 0.3f));
+
+                }
+                int m = 1;
+                foreach (var sq in lstGameObt)
+                {
+                    var square = sq;
+                    //square.transform.SetParent(null);
+                    square.GetComponent<SpriteRenderer>().sortingOrder = 20 - m;
+                    sequenceMove.Append(
+                        square.transform
+                            .DOMove(cellCache.transform.position, 0.15f)
+                            .SetEase(Ease.OutQuad)
+                    );
+                    sequenceMove.AppendCallback(() =>
+                    {
+                        cellCache.AddSquare(square);
+                    });
+                    m++;
+                }
+				sequenceMove.OnComplete(() =>
+				{
+					Destroy(cellPosAdd.gameObject);
+                    this.CurrentCellLast.SetTextNumberTotalSameType();
+                    /// set lại thằng CurrentCellLast = chính thằng vừa add rồi đệ quy lại addpoint này để xem có ăn không
+                    this.CurrentCellLast = cellCache;
+                    this.AddPoint(actionCb);
+                });	
 			});	
 		}
 		/// nếu không còn add được gì nữa thì sẽ gọi cb check  lại
@@ -464,5 +473,22 @@ public class GridManager : MonoBehaviour
 
 		return result;
 	}
-	#endregion
+    /// <summary>
+    /// hàm dùng để sinh ra 1 cell mới có các block bên trong dùng cho khi cộng điểm
+    /// </summary>
+    /// <param name="typeBlock"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public Cell SpawnGameObj(ETypeBlock typeBlock, int count,Cell cellAdd )
+    {
+        GameObject gameObj  = Instantiate(this.SquarePrefap);
+		Cell cell = gameObj.GetComponent<Cell>();
+        cell.transform.position = cellAdd.transform.position;
+        cell.gameObject.SetActive(true);
+        cell.lstBlock = new List<GameObject>();
+        List<GameObject> listSquare = new List<GameObject>();
+		cell.SpawnBlockAnim(typeBlock,count, cellAdd.lstBlock.Count);
+        return cell;
+    }
+    #endregion
 }

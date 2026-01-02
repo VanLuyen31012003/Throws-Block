@@ -128,10 +128,60 @@ public class Cell :MonoBehaviour
 		}	
 		this.SetTextNumberTotalSameType();
 	}
-	/// <summary>
-	/// Tính toán lại tổng số ô trên cùng có same type
-	/// </summary>
-	public void SetTextNumberTotalSameType()
+    /// <summary>
+    /// hàm này dùng để spawn block vào cell cộng thêm khi ăn điểm lớn hơn 10
+    /// cái listcount này để set thứ tự hiển thị cho đúng
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="count"></param>
+    public void SpawnBlockAnim(ETypeBlock type, int count,int listCount)
+    {
+        GameObject prefapInst = null;
+        switch (type)
+        {
+            case ETypeBlock.RED:
+                prefapInst = this.SquarePrefapRed;
+                break;
+            case ETypeBlock.GREEN:
+                prefapInst = this.SquarePrefapGreen;
+                break;
+            case ETypeBlock.YELLOW:
+                prefapInst = this.SquarePrefapYellow;
+                break;
+            case ETypeBlock.BLUE:
+                prefapInst = this.SquarePrefapBlue;
+                break;
+            case ETypeBlock.NONE:
+                break;
+
+        }
+        if (prefapInst != null)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                GameObject block = Instantiate(prefapInst, this.transform);
+                float y = (float)(lstBlock.Count + 1) / 15f;
+                block.transform.localPosition = new Vector2(0, y);
+                //block.transform.localPosition = Vector2.zero;	
+
+                //Debug.Log("x:"+block.transform.position.x);
+                //Debug.Log("y:" + block.transform.position.y);
+                // thêm thằng này đê nó hiển thị trên
+                block.GetComponent<SpriteRenderer>().sortingOrder =listCount+ lstBlock.Count + 1;
+                block.SetActive(true);
+                lstBlock.Add(block);
+            }
+        }
+        this.TotalNumberSquareTopSameType.gameObject.SetActive(true);
+        this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
+        this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
+        this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count+listCount;
+
+    }
+    /// <summary>
+    /// Tính toán lại tổng số ô trên cùng có same type
+    /// </summary>
+    public void SetTextNumberTotalSameType()
 	{
 		//this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 		// tức là nó đang rỗng
@@ -369,7 +419,47 @@ public class Cell :MonoBehaviour
 		pos.y = (float)(lstBlock.Count + indexSquare) / 15f;
 		return pos;
 	}
-	#endregion
+    #endregion
+
+    #region Instantiate Suqare
+    public List<GameObject> SpawnSquare(ETypeBlock typeBlock,int count)
+	{
+		List<GameObject> listSquare = new List<GameObject>();
+		for(int i=0;i<count;i++)
+		{
+			GameObject prefapInst = null;
+			switch (typeBlock)
+			{
+				case ETypeBlock.RED:
+					prefapInst = this.SquarePrefapRed;
+					break;
+				case ETypeBlock.GREEN:
+					prefapInst = this.SquarePrefapGreen;
+					break;
+				case ETypeBlock.YELLOW:
+					prefapInst = this.SquarePrefapYellow;
+					break;
+				case ETypeBlock.BLUE:
+					prefapInst = this.SquarePrefapBlue;
+					break;
+				case ETypeBlock.NONE:
+					break;
+			}
+			if (prefapInst != null)
+			{
+				GameObject block = Instantiate(prefapInst);
+				Vector2 pos = this.transform.position;
+                float y = (float)(lstBlock.Count + 1) / 15f;
+                block.transform.position = new Vector3(pos.x,pos.y+ y);
+                block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
+                block.SetActive(true);
+				listSquare.Add(block);
+            }
+        }
+		return listSquare;
+    }
+    #endregion
+
 }
 public enum ETypeBlock
 {
