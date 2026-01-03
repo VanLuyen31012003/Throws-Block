@@ -169,6 +169,27 @@ public class GridManager : MonoBehaviour
 			}
 		});
 	}
+    public void MergeToNoneBlock1(int i, int j, Cell cellMerge)
+    {
+        /// bắt đầu merge
+		foreach (var square in cellMerge.lstBlock)
+        {
+            CellGrid[i, j].AddSquare(square);
+        }
+        // xóa thằng cell bắn này đi
+        Destroy(cellMerge.gameObject);
+        List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
+
+        if (path.Count >= 2)
+        {
+            MergeByPathAnim(path, 0, CellGrid[i, j].GetLastSquareType());
+        }
+        else
+        {
+            this.CurrentCellLast = CellGrid[i, j];
+            AfterAllMergeDone(i, j);
+        }
+    }
     /// <summary>
     ///  Merge từ cell này sang cel kia theo path cho trước
     /// </summary>
@@ -191,9 +212,6 @@ public class GridManager : MonoBehaviour
 
         var listSquareSameTypeTop = from.GetListSameTypeFirst(type);
 
-        float duration = 0.3f;   // thời gian 1 anim
-        float overlap = 0.1f;    // gối đầu sau 0.2s
-
         float startTime = 0f;
         int i = 1;
 		int j = 1;
@@ -214,7 +232,7 @@ public class GridManager : MonoBehaviour
             seq.Insert(
                 startTime,
                 square.transform
-                    .DOMove(pos, duration)
+                    .DOMove(pos, StaticControl.TIME_DOTWEEN_DURATION_ANIM)
                     .SetEase(Ease.OutQuad)
             );
             seq.InsertCallback(startTime , () =>
@@ -224,12 +242,12 @@ public class GridManager : MonoBehaviour
                
             });
             // AddSquare sau khi anim của square đó xong
-            seq.InsertCallback(startTime + duration, () =>
+            seq.InsertCallback(startTime + StaticControl.TIME_DOTWEEN_DURATION_ANIM, () =>
             {
                 to.AddSquare(square);
             });
             i++;
-            startTime += overlap;
+            startTime += StaticControl.TIME_DOTWEEN_CONTINUOUS_ANIM;
         }
 
         // Sau khi toàn bộ anim gối đầu xong → merge tiếp cell kế
@@ -340,24 +358,42 @@ public class GridManager : MonoBehaviour
 			Sequence sq = DOTween.Sequence();
 			this.CurrentCellLast.SetVisibleTextNumberTotalSameType(false);
 			Vector3 positionPlayAnim= UIManager.Instance.uICoreHub.GetPositionSquareMission(typeTop);
-			if(positionPlayAnim==Vector3.zero)
-			{
-				// thực thi hiệu ứng scale xuống
-				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
-				{
-					sq.Append(square.transform.DOScale(0f, 0.1f).SetEase(Ease.OutQuad));
-				}
-			}
+            // thực thi hiệu ứng scale xuống
+            float startTime = 0f;
+            if (positionPlayAnim==Vector3.zero)
+			{         
+                foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
+                {
+                    sq.Insert(
+                        startTime,
+                        square.transform
+                            .DOScale(0f, StaticControl.TIME_DOTWEEN_DURATION_ANIM)
+                            .SetEase(Ease.OutQuad)
+                    );
+
+                    startTime += StaticControl.TIME_DOTWEEN_CONTINUOUS_ANIM;
+                }
+            }
 			else
 			{
 				// thực thi hiệu ứng scale xuống và move về thanh nhiệm vụ
 				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
 				{
-					// vừa move vừa scale xuống
-					sq.Append(square.transform.DOMove(positionPlayAnim, 0.1f).SetEase(Ease.OutQuad));
-					sq.Join(square.transform.DOScale(0f, 0.1f).SetEase(Ease.OutQuad));
-				}
-			}		
+					sq.Insert(startTime,square.transform
+                    .DOMove(positionPlayAnim, 0.1f)
+                    .SetEase(Ease.OutQuad));
+                    // vừa move vừa scale xuống
+                    sq.Insert(
+                       startTime,
+                       square.transform
+                           .DOScale(0f, StaticControl.TIME_DOTWEEN_DURATION_ANIM)
+                           .SetEase(Ease.OutQuad)
+					 );
+                    startTime += StaticControl.TIME_DOTWEEN_CONTINUOUS_ANIM;
+                    //sq.Append(square.transform.DOMove(positionPlayAnim, 0.1f).SetEase(Ease.OutQuad));
+                    //sq.Join(square.transform.DOScale(0f, 0.1f).SetEase(Ease.OutQuad));
+                }
+            }		
 			sq.OnComplete(() => {
                 this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
                 // cập nhật lại gjá trị nhiệm vụ
