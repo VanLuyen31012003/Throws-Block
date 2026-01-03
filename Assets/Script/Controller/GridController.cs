@@ -169,64 +169,77 @@ public class GridManager : MonoBehaviour
 			}
 		});
 	}
-	/// <summary>
-	///  Merge từ cell này sang cel kia theo path cho trước
-	/// </summary>
-	/// <param name="path"></param>
-	/// <param name="type"></param>
-	private void MergeByPathAnim(List<Cell> path,int index, ETypeBlock type)
-	{
-		if (index >= path.Count-1)
-		{
-			this.CurrentCellLast = path[index];
-			AfterAllMergeDone(path[0].x, path[0].y);
-			return;
-		}
-		Cell from = path[index];
-		Cell to = path[index + 1];
-		Sequence seq = DOTween.Sequence();
-		var listSquareSameTypeTop = from.GetListSameTypeFirst(type);
-		int i = 1;
-		//foreach(var sq1 in listSquareSameTypeTop)
-		//{
-		//	sq1.GetComponent<SpriteRenderer>().sortingOrder = to.GetSlotSortingLayer(i);
-		//	i++;
-		//}
-		//listSquareSameTypeTop.Reverse();
-		int baseCount = to.lstBlock.Count;
-		foreach (var sq in listSquareSameTypeTop)
-		{
-			var square = sq;
-			//square.transform.SetParent(null);
-			square.GetComponent<SpriteRenderer>().sortingOrder = 20-i;
-			Vector3 pos = to.transform.position + Vector3.up * ((to.lstBlock.Count + i) / 15f);
-			seq.Append(
-				square.transform
-					.DOMove(pos, 0.1f)
-					.SetEase(Ease.OutQuad)
-			);
-			seq.Join(
-				square.transform
-					.DOScale(0.6f, 0.05f)
-					.SetEase(Ease.OutBack)
-			);
-			seq.Append(
-				square.transform
-					.DOScale(1f, 0.05f)
-			);
-			seq.AppendCallback(() =>
-			{
-				to.AddSquare(square);// add vào square
-			});
-			i++;
-		}
-		// đệ quy lại
-		seq.OnComplete(() => {
-			MergeByPathAnim(path,index+1,type);
-		});
+    /// <summary>
+    ///  Merge từ cell này sang cel kia theo path cho trước
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="type"></param>
+    private void MergeByPathAnim(List<Cell> path, int index, ETypeBlock type)
+    {
+        // Điều kiện dừng
+        if (index >= path.Count - 1)
+        {
+            this.CurrentCellLast = path[index];
+            AfterAllMergeDone(path[0].x, path[0].y);
+            return;
+        }
 
-	}
-	private void AfterAllMergeDone(int i, int j)
+        Cell from = path[index];
+        Cell to = path[index + 1];
+
+        Sequence seq = DOTween.Sequence();
+
+        var listSquareSameTypeTop = from.GetListSameTypeFirst(type);
+
+        float duration = 0.3f;   // thời gian 1 anim
+        float overlap = 0.1f;    // gối đầu sau 0.2s
+
+        float startTime = 0f;
+        int i = 1;
+		int j = 1;
+		int count =listSquareSameTypeTop.Count;
+        //	listSquareSameTypeTop.Reverse();
+        foreach (var sq in listSquareSameTypeTop)
+        {
+            var square = sq;
+
+            // Sorting layer
+            //square.GetComponent<SpriteRenderer>().sortingOrder = 20 - (count-i);
+
+            // Vị trí bay tới
+            Vector3 pos = to.transform.position
+                        + Vector3.up * ((to.lstBlock.Count + i) / 15f);
+
+            // Insert animation gối đầu
+            seq.Insert(
+                startTime,
+                square.transform
+                    .DOMove(pos, duration)
+                    .SetEase(Ease.OutQuad)
+            );
+            seq.InsertCallback(startTime , () =>
+            {
+                square.GetComponent<SpriteRenderer>().sortingOrder = 20 - (count - j);
+				j++;
+               
+            });
+            // AddSquare sau khi anim của square đó xong
+            seq.InsertCallback(startTime + duration, () =>
+            {
+                to.AddSquare(square);
+            });
+            i++;
+            startTime += overlap;
+        }
+
+        // Sau khi toàn bộ anim gối đầu xong → merge tiếp cell kế
+        seq.OnComplete(() =>
+        {
+            MergeByPathAnim(path, index + 1, type);
+        });
+    }
+
+    private void AfterAllMergeDone(int i, int j)
 	{
 		AddPoint(() => {
 			if (ScoreManager.Instance.CheckWin())
@@ -332,7 +345,7 @@ public class GridManager : MonoBehaviour
 				// thực thi hiệu ứng scale xuống
 				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
 				{
-					sq.Append(square.transform.DOScale(0f, 0.2f).SetEase(Ease.OutQuad));
+					sq.Append(square.transform.DOScale(0f, 0.1f).SetEase(Ease.OutQuad));
 				}
 			}
 			else
@@ -341,8 +354,8 @@ public class GridManager : MonoBehaviour
 				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
 				{
 					// vừa move vừa scale xuống
-					sq.Append(square.transform.DOMove(positionPlayAnim, 0.2f).SetEase(Ease.OutQuad));
-					sq.Join(square.transform.DOScale(0f, 0.2f).SetEase(Ease.OutQuad));
+					sq.Append(square.transform.DOMove(positionPlayAnim, 0.1f).SetEase(Ease.OutQuad));
+					sq.Join(square.transform.DOScale(0f, 0.1f).SetEase(Ease.OutQuad));
 				}
 			}		
 			sq.OnComplete(() => {
@@ -364,14 +377,29 @@ public class GridManager : MonoBehaviour
                 List<GameObject> lstGameObt = new List<GameObject>();
                 lstGameObt=cellPosAdd.lstBlock;
 				lstGameObt.Reverse();
+				int k = 0;
                 foreach (var square in lstGameObt)
 				{
+						
 					Vector2 posCache = square.transform.position;
 					posCache.y=posCache.y+0.6f;
 					sequenceMove.Join(square.transform.DOMove(posCache, 0.3f));
+                    if (k == 0)
+                    {
+						sequenceMove.Join((cellPosAdd.TotalNumberSquareTopSameType.transform.DOMove(posCache, 0.3f)));
+                    }
+					k++;
 
                 }
                 int m = 1;
+				sequenceMove.AppendCallback(() => {
+					Debug.Log("Vào logic add point chuyển sang thằng khác để add ");
+                    Destroy(cellPosAdd.TotalNumberSquareTopSameType.gameObject);
+
+                    cellCache.SetVisibleTextNumberTotalSameType(false);
+				});
+
+                cellPosAdd.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = 20 ;
                 foreach (var sq in lstGameObt)
                 {
                     var square = sq;

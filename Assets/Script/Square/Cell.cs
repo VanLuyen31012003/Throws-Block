@@ -34,8 +34,7 @@ public class Cell :MonoBehaviour
 	/// <summary>
 	/// text tổng số square block ở trên cùng chung loại
 	/// </summary>
-	[SerializeField]
-	private TextMesh TotalNumberSquareTopSameType;
+	public TextMesh TotalNumberSquareTopSameType;
 
 	/// <summary>
 	/// độ dài cộng thêm cho tia ray
