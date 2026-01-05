@@ -302,6 +302,26 @@ public class Cell :MonoBehaviour
 		return list.Count;
 	}
 	/// <summary>
+	/// Lấy ra tổng số lượng các prefap trong cell cùng kiểu truyền vào
+	/// </summary>
+	/// <param name="type"></param>
+	/// <param name="isGetCount"></param>
+	/// <returns></returns>
+	public int GetTotalSuareSameTypeInCell(ETypeBlock type)
+	{
+		int count = 0;
+
+		for (int i = this.lstBlock.Count - 1; i >= 0; i--)
+		{
+			if (this.lstBlock[i].GetComponent<Square>().typeBlock == type)
+			{
+				count++;
+			}
+		}
+
+		return count;
+	}
+	/// <summary>
 	/// Clear dữ liệu trong list này đi đồng thời destroy gameobj luôn
 	/// </summary>
 	public void ClearAndDestroyListGameObj()

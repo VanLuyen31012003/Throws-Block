@@ -128,40 +128,45 @@ public class GridManager : MonoBehaviour
 	public void MergeToNoneBlock(int i, int j, Cell cellMerge)
 	{
 		Sequence seq = DOTween.Sequence();
-
-		List<GameObject> squaresToMove = new List<GameObject>(cellMerge.lstBlock);
-		cellMerge.lstBlock.Clear();
-		// lật ngược lại để phục vụ cho hiệu ứng
-		squaresToMove.Reverse();
-		int m = 1;
-		foreach (var sq in squaresToMove)
+		/// bắt đầu merge
+		foreach (var square in cellMerge.lstBlock)
 		{
-			var square = sq; 
-			square.transform.SetParent(null);
-			square.GetComponent<SpriteRenderer>().sortingOrder = 20-m;
-			seq.Append(
-				square.transform
-					.DOMove(CellGrid[i, j].transform.position, 0.15f)
-					.SetEase(Ease.OutQuad)
-			);
-			seq.AppendCallback(() =>
-			{
-				CellGrid[i, j].AddSquare(square);
-			});
-			m++;
+			CellGrid[i, j].AddSquare(square);
 		}
-
-		// destroy cell bắn lên (chỉ còn animation)
+		seq.AppendInterval(0.2f);
+		// xóa thằng cell bắn này đi
 		Destroy(cellMerge.gameObject);
 
 		seq.OnComplete(() =>
 		{
-			List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
-
-			if (path.Count >= 2)
+			// lấy ra list type có trong thằng merge đầu này
+			List<ETypeBlock> stackTypes = CellGrid[i, j].lstBlock.Select(b => b.GetComponent<Square>().typeBlock)
+			.Distinct()
+			.ToList();
+			//reverse để lấy cái từ trên đầu trước
+			stackTypes.Reverse();
+			// dic lưu dữ liệu cell và đường đi
+			Dictionary<ETypeBlock, List<Cell>> dicTypeAndPath = new Dictionary<ETypeBlock, List<Cell>>();
+			foreach (var type in stackTypes )
 			{
-				MergeByPathAnim(path, 0, CellGrid[i, j].GetLastSquareType());
+				List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j], type);
+				if(path.Count>=2)
+				{
+					dicTypeAndPath.TryAdd(type,path);
+				}
+				else
+				{
+					break;
+				}	
 			}
+			// nếu có cái cần merge
+			if(dicTypeAndPath.Count>0)
+			{
+				foreach (var element in dicTypeAndPath)
+				{
+					MergeByPathAnim(element.Value, 0, element.Key);
+				}
+			}	
 			else
 			{
 				this.CurrentCellLast = CellGrid[i,j];
@@ -169,33 +174,33 @@ public class GridManager : MonoBehaviour
 			}
 		});
 	}
-    public void MergeToNoneBlock1(int i, int j, Cell cellMerge)
-    {
-        /// bắt đầu merge
-		foreach (var square in cellMerge.lstBlock)
-        {
-            CellGrid[i, j].AddSquare(square);
-        }
-        // xóa thằng cell bắn này đi
-        Destroy(cellMerge.gameObject);
-        List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
+	//public void MergeToNoneBlock1(int i, int j, Cell cellMerge)
+	//{
+	//	/// bắt đầu merge
+	//	foreach (var square in cellMerge.lstBlock)
+	//	{
+	//		CellGrid[i, j].AddSquare(square);
+	//	}
+	//	// xóa thằng cell bắn này đi
+	//	Destroy(cellMerge.gameObject);
+	////	List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
 
-        if (path.Count >= 2)
-        {
-            MergeByPathAnim(path, 0, CellGrid[i, j].GetLastSquareType());
-        }
-        else
-        {
-            this.CurrentCellLast = CellGrid[i, j];
-            AfterAllMergeDone(i, j);
-        }
-    }
-    /// <summary>
-    ///  Merge từ cell này sang cel kia theo path cho trước
-    /// </summary>
-    /// <param name="path"></param>
-    /// <param name="type"></param>
-    private void MergeByPathAnim(List<Cell> path, int index, ETypeBlock type)
+	//	if (path.Count >= 2)
+	//	{
+	//		MergeByPathAnim(path, 0, CellGrid[i, j].GetLastSquareType());
+	//	}
+	//	else
+	//	{
+	//		this.CurrentCellLast = CellGrid[i, j];
+	//		AfterAllMergeDone(i, j);
+	//	}
+	//}
+	/// <summary>
+	///  Merge từ cell này sang cel kia theo path cho trước
+	/// </summary>
+	/// <param name="path"></param>
+	/// <param name="type"></param>
+	private void MergeByPathAnim(List<Cell> path, int index, ETypeBlock type)
     {
         // Điều kiện dừng
         if (index >= path.Count - 1)

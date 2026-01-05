@@ -15,13 +15,11 @@ public static class BfsPath
 	/// </summary>
 	/// <param name="startCell"></param>
 	/// <returns></returns>
-	public static List<Cell> FindBestMergePathBFS(Cell startCell)
+	public static List<Cell> FindBestMergePathBFS(Cell startCell,ETypeBlock type)
 	{
-		ETypeBlock type = startCell.GetLastSquareType();
-
 		Queue<MergePathState> queue = new Queue<MergePathState>();
 		List<Cell> bestPath = new List<Cell>();
-		int maxTotal = startCell.GetTotalSuareSameTypeOntop();
+		int maxTotal = startCell.GetTotalSuareSameTypeInCell(type);
 
 		queue.Enqueue(new MergePathState
 		{

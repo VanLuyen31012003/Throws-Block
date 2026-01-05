@@ -60,6 +60,15 @@ public class FrameShoot : MonoBehaviour
 		this.count = UnityEngine.Random.Range(1, 8);
 		Debug.Log("random ra giá trị:" + (int)ETypeBlockRandom + count);
 		this.currentCell.SpawnBlock(ETypeBlockRandom, count);
+		//---------------- lần 2
+		ETypeBlock typeSecond;
+		this.count = UnityEngine.Random.Range(1, 8);
+		do
+		{
+			typeSecond =(ETypeBlock)UnityEngine.Random.Range(1, 5); 
+		} while (typeSecond == this.ETypeBlockRandom);
+		this.currentCell.SpawnBlock(typeSecond, count);
+
 	}
 	#endregion
 }
