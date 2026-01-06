@@ -44,6 +44,7 @@ public class UIPopupWin : BasePopup
 	/// </summary>
 	private void UIButton_PlayLevelAgain_Clicked()
 	{
+		LevelManager.Instance.BackLevel();
 		GameManager.Instance.SetUpPlayGame();
 		this.HidePopup();
 	}

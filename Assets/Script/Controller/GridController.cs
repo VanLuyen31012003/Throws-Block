@@ -299,7 +299,7 @@ public class GridManager : MonoBehaviour
         // dịch ô nếu cần
         if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
         {
-            TranslateCell(i, j, CellGrid[i, j]);
+            TranslateCell(i, j);
         }
 
         // hết lượt
@@ -309,25 +309,57 @@ public class GridManager : MonoBehaviour
         }
     }	
 
-	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
+	public void TranslateCell(int rowIndex, int col)
 	{
-		// clear dữ liệu trong list cái này đi
-		 CellGrid[0, col].ClearAndDestroyListGameObj();
-		// bắt đầu dịch dữ liệu
-		for (int row = 1; row <= rowIndex; row++)
+		int checkIndex = this.GetRowCellEmpty(col);
+		//Nếu không có ô nào trong cột rỗng thì dịch cả cột
+		if(checkIndex<0)
 		{
-			// add dữ liệu block của thằng này sang thằng trước
-			//CellGrid[row - 1, col] = CellGrid[row, col]; 
-			foreach (var square in CellGrid[row, col].lstBlock)
+			// clear dữ liệu trong list cái này đi
+			CellGrid[0, col].ClearAndDestroyListGameObj();
+			// bắt đầu dịch dữ liệu
+			for (int row = 1; row <= rowIndex; row++)
 			{
-				CellGrid[row - 1, col].AddSquare(square);
-			}
-			// sau đó sẽ clear cái list đi 
-			CellGrid[row, col].ClearListGameObj();
+				// add dữ liệu block của thằng này sang thằng trước
+				//CellGrid[row - 1, col] = CellGrid[row, col]; 
+				foreach (var square in CellGrid[row, col].lstBlock)
+				{
+					CellGrid[row - 1, col].AddSquare(square);
+				}
+				// sau đó sẽ clear cái list đi 
+				CellGrid[row, col].ClearListGameObj();
 
+			}
+		}
+		else
+		{
+			// bắt đầu dịch dữ liệu
+			for (int row = checkIndex; row <= rowIndex; row++)
+			{
+				// add dữ liệu block của thằng này sang thằng trước
+				//CellGrid[row - 1, col] = CellGrid[row, col]; 
+				foreach (var square in CellGrid[row, col].lstBlock)
+				{
+					CellGrid[row - 1, col].AddSquare(square);
+				}
+				// sau đó sẽ clear cái list đi 
+				CellGrid[row, col].ClearListGameObj();
+
+			}
 		}
 		//Cập nhật lại text cho ô cuối
 		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
+	}
+	private int GetRowCellEmpty(int j)
+	{
+		for(int i = this._row-1;i>=0;i--)
+		{
+			if (CellGrid[i,j].lstBlock.Count==0 )
+			{
+				return i;
+			}	
+		}	
+		return -1;
 	}
 	/// <summary>
 	/// Hàm lấy ra ô hiện tại mà k gây lỗi 

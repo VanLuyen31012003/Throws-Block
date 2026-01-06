@@ -48,6 +48,19 @@ public class LevelManager : Singleton<LevelManager>
 		PlayerPrefs.SetInt(StaticControl.KEY_LEVEL, levelPlayerNow+1);
 		Debug.Log($"Update từ level {levelPlayerNow} lên level {levelPlayerNow + 1}");
 	}
+	//Back Level của game hiện tại về bàn phía trước
+	public void BackLevel()
+	{
+		int levelPlayerNow = PlayerPrefs.GetInt(StaticControl.KEY_LEVEL, -1);
+		if (levelPlayerNow < 0)
+		{
+			Debug.Log("Back level Mặc định là 1");
+			PlayerPrefs.SetInt(StaticControl.KEY_LEVEL, 1);
+			return;
+		}
+		PlayerPrefs.SetInt(StaticControl.KEY_LEVEL, levelPlayerNow - 1);
+		Debug.Log($"Back từ level {levelPlayerNow} về level {levelPlayerNow - 1}");
+	}
 	// Lấy ra Level hiện tại của người chơi
 	public LevelConfig GetLevel()
 	{
