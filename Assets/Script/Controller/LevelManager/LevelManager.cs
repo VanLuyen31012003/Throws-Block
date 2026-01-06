@@ -70,7 +70,7 @@ public class LevelManager : Singleton<LevelManager>
 		{
 			// set level mặc định là 1
 			PlayerPrefs.SetInt(StaticControl.KEY_LEVEL, 1);
-			return levelConfigs[1];
+			return levelConfigs[1].Clone();
 		}
 		return levelConfigs[levelPlayerNow].Clone();
 	}

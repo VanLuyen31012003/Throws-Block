@@ -37,7 +37,8 @@ public class LevelConfig
 	// Cái này để tránh chung reference 
 	public LevelConfig Clone()
 	{
-		return (LevelConfig)this.MemberwiseClone();
+		string json = JsonUtility.ToJson(this);
+		return JsonUtility.FromJson<LevelConfig>(json);
 	}
 
 }
