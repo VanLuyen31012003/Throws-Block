@@ -63,7 +63,17 @@ public class GridManager : MonoBehaviour
 	/// <summary>
 	/// cell cuối cùng lúc merge
 	/// </summary>
-	private Cell CurrentCellLast;
+	//private Cell CurrentCellLast;
+
+    /// <summary>
+    /// dic này để lưu dấu các cell cuối cùng đã merge trong 1 lượt của từng loại block
+    /// </summary>
+    private Dictionary<ETypeBlock, Cell> dicCurrentLast= new Dictionary<ETypeBlock, Cell>();
+
+    /// <summary>
+    /// Số loại type merge trong 1 lượt
+    /// </summary>
+    private int totalTypeMerge;
     #endregion
 
     #region function logic
@@ -128,8 +138,11 @@ public class GridManager : MonoBehaviour
 	public void MergeToNoneBlock(int i, int j, Cell cellMerge)
 	{
 		Sequence seq = DOTween.Sequence();
-		/// bắt đầu merge
-		foreach (var square in cellMerge.lstBlock)
+        //reset lại dữ liệu cờ
+        this.dicCurrentLast.Clear();
+		this.totalTypeMerge = 0;
+        /// bắt đầu merge
+        foreach (var square in cellMerge.lstBlock)
 		{
 			CellGrid[i, j].AddSquare(square);
 		}
@@ -152,7 +165,8 @@ public class GridManager : MonoBehaviour
 				List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j], type);
 				if(path.Count>=2)
 				{
-					dicTypeAndPath.TryAdd(type,path);
+                    this.dicCurrentLast.TryAdd(type, path[path.Count-1]);
+                    dicTypeAndPath.TryAdd(type,path);
 				}
 				else
 				{
@@ -162,16 +176,16 @@ public class GridManager : MonoBehaviour
 			// nếu có cái cần merge
 			if(dicTypeAndPath.Count>0)
 			{
-				foreach (var element in dicTypeAndPath)
+				this.totalTypeMerge = dicTypeAndPath.Count;
+                foreach (var element in dicTypeAndPath)
 				{
 					MergeByPathAnim(element.Value, 0, element.Key);
 				}
 			}	
 			else
 			{
-				this.CurrentCellLast = CellGrid[i,j];
-				AfterAllMergeDone(i, j);
-			}
+				this.DetermineCheckWinOrTranslate(i, j);
+            }
 		});
 	}
 	//public void MergeToNoneBlock1(int i, int j, Cell cellMerge)
@@ -205,8 +219,8 @@ public class GridManager : MonoBehaviour
         // Điều kiện dừng
         if (index >= path.Count - 1)
         {
-            this.CurrentCellLast = path[index];
-            AfterAllMergeDone(path[0].x, path[0].y);
+			this.dicCurrentLast[type] = path[index];
+            AfterAllMergeDone(path[0].x, path[0].y, type);
             return;
         }
 
@@ -262,28 +276,38 @@ public class GridManager : MonoBehaviour
         });
     }
 
-    private void AfterAllMergeDone(int i, int j)
+    /// <summary>
+    /// truyền thêm type để biết được thằng nào merge xong rồi
+    /// </summary>
+    /// <param name="i"></param>
+    /// <param name="j"></param>
+    /// <param name="typeBlock"></param>
+    private void AfterAllMergeDone(int i, int j,ETypeBlock typeKey)
 	{
 		AddPoint(() => {
-			if (ScoreManager.Instance.CheckWin())
-				return;
+			this.totalTypeMerge--;
+            // nếu mà tất cả các loại merge đã xong thì mới check win dịch ô
+			if (this.totalTypeMerge <= 0)
+                DetermineCheckWinOrTranslate(i, j);
 
-			CurrentCellLast = null;
-
-			// dịch ô nếu cần
-			if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
-			{
-				TranslateCell(i, j, CellGrid[i, j]);
-			}
-
-			// hết lượt
-			if (!ScoreManager.Instance.IsHaveTurn())
-			{
-				ScoreManager.Instance.ShowLose();
-			}
-		});	
+        },typeKey);	
 	}
+	private void DetermineCheckWinOrTranslate(int i, int j)
+	{
+        if (ScoreManager.Instance.CheckWin())
+            return;
+        // dịch ô nếu cần
+        if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
+        {
+            TranslateCell(i, j, CellGrid[i, j]);
+        }
 
+        // hết lượt
+        if (!ScoreManager.Instance.IsHaveTurn())
+        {
+            ScoreManager.Instance.ShowLose();
+        }
+    }	
 
 	public void TranslateCell(int rowIndex, int col, Cell cellNeedTranslate)
 	{
@@ -353,21 +377,21 @@ public class GridManager : MonoBehaviour
 	/// <summary>
 	/// Hàm này sẽ thực hiện việc gọi cộng điểm liên kết với score manager
 	/// </summary>
-	private void AddPoint(Action actionCb)
+	private void AddPoint(Action actionCb,ETypeBlock typeKey)
 	{
-		ETypeBlock typeTop = this.CurrentCellLast.GetLastSquareType();
-		int point = ScoreManager.Instance.AddPoint(this.CurrentCellLast.GetTotalSuareSameTypeOntop(), typeTop,out int totalRemainPoint);
+		
+		int point = ScoreManager.Instance.AddPoint(this.dicCurrentLast[typeKey].GetTotalSuareSameTypeOntop(), typeKey, out int totalRemainPoint);
 		// kiểm tra xe ô cuối lớn hơn không thì tức là nó đủ đk xóa rồi
 		if (point > 0)
 		{
 			Sequence sq = DOTween.Sequence();
-			this.CurrentCellLast.SetVisibleTextNumberTotalSameType(false);
-			Vector3 positionPlayAnim= UIManager.Instance.uICoreHub.GetPositionSquareMission(typeTop);
+			this.dicCurrentLast[typeKey].SetVisibleTextNumberTotalSameType(false);
+			Vector3 positionPlayAnim= UIManager.Instance.uICoreHub.GetPositionSquareMission(typeKey);
             // thực thi hiệu ứng scale xuống
             float startTime = 0f;
             if (positionPlayAnim==Vector3.zero)
 			{         
-                foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
+                foreach (var square in this.dicCurrentLast[typeKey].GetListSameTypeFirst(typeKey, true))
                 {
                     sq.Insert(
                         startTime,
@@ -382,7 +406,7 @@ public class GridManager : MonoBehaviour
 			else
 			{
 				// thực thi hiệu ứng scale xuống và move về thanh nhiệm vụ
-				foreach (var square in this.CurrentCellLast.GetListSameTypeFirst(typeTop, true))
+				foreach (var square in this.dicCurrentLast[typeKey].GetListSameTypeFirst(typeKey, true))
 				{
 					sq.Insert(startTime,square.transform
                     .DOMove(positionPlayAnim, 0.1f)
@@ -400,21 +424,21 @@ public class GridManager : MonoBehaviour
                 }
             }		
 			sq.OnComplete(() => {
-                this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
+                this.dicCurrentLast[typeKey].ClearListSquareHaveSameTypeOnTop();
                 // cập nhật lại gjá trị nhiệm vụ
-                UIManager.Instance.uICoreHub.SetTargetItem(typeTop, totalRemainPoint);
+                UIManager.Instance.uICoreHub.SetTargetItem(typeKey, totalRemainPoint);
 				// lấy ra 1 ô trong grid đang có cùng type và số lượng nhiều nhất
-				Cell cellCache = this.GetCellAddMoreInGrid(typeTop, this.CurrentCellLast.x, this.CurrentCellLast.y);
+				Cell cellCache = this.GetCellAddMoreInGrid(typeKey, this.dicCurrentLast[typeKey].x, this.dicCurrentLast[typeKey].y);
 				// nếu mà không còn ô nào cùng loại thì clear đi
 				if (cellCache == null)
 				{
 					Debug.Log("Vào logic add point xóa tất cả vì k tìm thấy thằng nào ");
-					this.CurrentCellLast.ClearListSquareHaveSameTypeOnTop();
-					this.CurrentCellLast.SetTextNumberTotalSameType();
+					this.dicCurrentLast[typeKey].ClearListSquareHaveSameTypeOnTop();
+					this.dicCurrentLast[typeKey].SetTextNumberTotalSameType();
 					return;
 				}
 				Sequence sequenceMove =DOTween.Sequence();
-				Cell cellPosAdd = this.SpawnGameObj(typeTop, point, this.CurrentCellLast);
+				Cell cellPosAdd = this.SpawnGameObj(typeKey, point, this.dicCurrentLast[typeKey]);
                 List<GameObject> lstGameObt = new List<GameObject>();
                 lstGameObt=cellPosAdd.lstBlock;
 				lstGameObt.Reverse();
@@ -460,10 +484,10 @@ public class GridManager : MonoBehaviour
 				sequenceMove.OnComplete(() =>
 				{
 					Destroy(cellPosAdd.gameObject);
-                    this.CurrentCellLast.SetTextNumberTotalSameType();
+                    this.dicCurrentLast[typeKey].SetTextNumberTotalSameType();
                     /// set lại thằng CurrentCellLast = chính thằng vừa add rồi đệ quy lại addpoint này để xem có ăn không
-                    this.CurrentCellLast = cellCache;
-                    this.AddPoint(actionCb);
+                    this.dicCurrentLast[typeKey] = cellCache;
+                    this.AddPoint(actionCb,typeKey);
                 });	
 			});	
 		}
@@ -502,13 +526,14 @@ public class GridManager : MonoBehaviour
 				Destroy(transform.GetChild(i).gameObject);
 			}
 			// reset dữ liệu
-			CellGrid = null;
-			_row = 0;
-			_col = 0;
-			_width = 0;
-			_height = 0;
-			CurrentCellLast = null;
-			levelConfig = null;
+			this.CellGrid = null;
+			this._row = 0;
+			this._col = 0;
+			this._width = 0;
+			this._height = 0;
+			this.dicCurrentLast.Clear();
+			this.totalTypeMerge = 0;
+            this.levelConfig = null;
 		}
 	}
 	/// <summary>
