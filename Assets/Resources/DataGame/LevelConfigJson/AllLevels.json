@@ -1,7 +1,7 @@
 ﻿{
   "levels": [
     {
-      "level": 1,
+      "level": 2,
       "rows": 6,
       "cols": 6,
       "numberInARound": 15,
@@ -447,9 +447,9 @@
     },
 
     {
-      "level": 2,
-      "rows": 7,
-      "cols": 7,
+      "level": 3,
+      "rows": 8,
+      "cols": 8,
       "numberInARound": 12,
       "targets": [
         {
@@ -628,7 +628,7 @@
     },
 
     {
-      "level": 3,
+      "level": 1,
       "rows": 6,
       "cols": 8,
       "numberInARound": 15,

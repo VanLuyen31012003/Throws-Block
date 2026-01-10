@@ -87,7 +87,7 @@ public class GridManager : MonoBehaviour
 		this._col = levelConfig.cols;
 		this.CellGrid = new Cell[_row, _col];
 		this.levelConfig = levelConfig;
-		SpriteRenderer spriteRenderer = SquarePrefap.GetComponent<SpriteRenderer>();
+		SpriteRenderer spriteRenderer = ImgBackground.GetComponent<SpriteRenderer>();
 		this._width = spriteRenderer.sprite.bounds.size.x;
 		this._height = spriteRenderer.sprite.bounds.size.y;
 		this.BuildGridLayout();
@@ -99,21 +99,32 @@ public class GridManager : MonoBehaviour
 	private void BuildGridLayout()
 	{
 		int countIndex = 0;
+
+		float totalWidth = _col * _width;
+		float totalHeight = _row * _height;
+
+		float startX = -totalWidth / 2f + _width / 2f;
+		float startY = totalHeight / 2f - _height / 2f;
+
 		for (int i = 0; i < this._row; i++)
 		{
 			for (int j = 0; j < this._col; j++)
 			{
 				GameObject imgBg = Instantiate(this.ImgBackground, this.transform);
 				GameObject gridItem = Instantiate(SquarePrefap, this.transform);
-				float posX = j * _width;
-				float posy = i * -_height;
-				gridItem.transform.localPosition = new Vector2(posX, posy);
-				imgBg.transform.localPosition = new Vector2(posX, posy);
+
+				float posX = startX + j * _width;
+				float posY = startY - i * _height;
+
+				gridItem.transform.localPosition = new Vector2(posX, posY);
+				imgBg.transform.localPosition = new Vector2(posX, posY);
+
 				CellGrid[i, j] = gridItem.GetComponent<Cell>();
 				CellGrid[i, j].x = i;
 				CellGrid[i, j].y = j;
-				// nếu nó có dữ liệu
-				if (this.levelConfig.cellDataConfigs.Count> countIndex && this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count >= 1)
+
+				if (this.levelConfig.cellDataConfigs.Count > countIndex &&
+					this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs.Count >= 1)
 				{
 					foreach (var dataInCell in this.levelConfig.cellDataConfigs[countIndex].squareBoxDataConfigs)
 					{
@@ -128,8 +139,9 @@ public class GridManager : MonoBehaviour
 				countIndex++;
 			}
 		}
-		this.transform.position = new Vector2(-1.9f, 3);
+		this.transform.position = new Vector2(0, 0.37f);
 	}
+
 	///  hàm này sẽ để merge ô bắn từ slide lên
 	/// </summary>
 	/// <param name="i"></param>

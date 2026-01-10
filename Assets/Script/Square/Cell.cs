@@ -92,16 +92,16 @@ public class Cell :MonoBehaviour
 		GameObject prefapInst = null;
 		switch (type)
 		{
-			case ETypeBlock.RED:
+			case ETypeBlock.APPLE:
 				prefapInst = this.SquarePrefapRed;
 				break;
-			case ETypeBlock.GREEN:
+			case ETypeBlock.WATERMELON:
 				prefapInst = this.SquarePrefapGreen;
 				break;
-			case ETypeBlock.YELLOW:
+			case ETypeBlock.MANGO:
 				prefapInst = this.SquarePrefapYellow;
 				break;
-			case ETypeBlock.BLUE:	
+			case ETypeBlock.CHERRY:	
 				prefapInst = this.SquarePrefapBlue;
 				break;
 			case ETypeBlock.NONE:
@@ -138,16 +138,16 @@ public class Cell :MonoBehaviour
         GameObject prefapInst = null;
         switch (type)
         {
-            case ETypeBlock.RED:
+            case ETypeBlock.APPLE:
                 prefapInst = this.SquarePrefapRed;
                 break;
-            case ETypeBlock.GREEN:
+            case ETypeBlock.WATERMELON:
                 prefapInst = this.SquarePrefapGreen;
                 break;
-            case ETypeBlock.YELLOW:
+            case ETypeBlock.MANGO:
                 prefapInst = this.SquarePrefapYellow;
                 break;
-            case ETypeBlock.BLUE:
+            case ETypeBlock.CHERRY:
                 prefapInst = this.SquarePrefapBlue;
                 break;
             case ETypeBlock.NONE:
@@ -449,16 +449,16 @@ public class Cell :MonoBehaviour
 			GameObject prefapInst = null;
 			switch (typeBlock)
 			{
-				case ETypeBlock.RED:
+				case ETypeBlock.APPLE:
 					prefapInst = this.SquarePrefapRed;
 					break;
-				case ETypeBlock.GREEN:
+				case ETypeBlock.WATERMELON:
 					prefapInst = this.SquarePrefapGreen;
 					break;
-				case ETypeBlock.YELLOW:
+				case ETypeBlock.MANGO:
 					prefapInst = this.SquarePrefapYellow;
 					break;
-				case ETypeBlock.BLUE:
+				case ETypeBlock.CHERRY:
 					prefapInst = this.SquarePrefapBlue;
 					break;
 				case ETypeBlock.NONE:
@@ -483,9 +483,9 @@ public class Cell :MonoBehaviour
 public enum ETypeBlock
 {
 	NONE=0,
-	RED=1,
-	GREEN=2,
-	BLUE=3,
-	YELLOW=4,
+	APPLE=1,
+	WATERMELON=2,
+	CHERRY=3,
+	MANGO=4,
 
 }

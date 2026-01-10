@@ -17,25 +17,25 @@ public class TargetPrefapUI : MonoBehaviour
 	/// ảnh red
 	/// </summary>
 	[SerializeField]
-	private Sprite Red;
+	private Sprite Apple;
 
 	/// <summary>
 	/// ảnh green
 	/// </summary>
 	[SerializeField]
-	private Sprite Green;
+	private Sprite WaterMelon;
 
 	/// <summary>
 	/// ảnh blue
 	/// </summary>
 	[SerializeField]
-	private Sprite Blue;
+	private Sprite Cherry;
 
 	/// <summary>
 	/// ảnh yellow
 	/// </summary>
 	[SerializeField]
-	private Sprite Yellow;
+	private Sprite Mango;
 	#endregion
 
 	#region Public Field
@@ -63,21 +63,21 @@ public class TargetPrefapUI : MonoBehaviour
 		this.UIText_NumberNeed.text= numberNeed.ToString();
 		switch (type)
 		{
-			case ETypeBlock.RED:
-				this.GetComponent<Image>().sprite = this.Red;
-				this.Type = ETypeBlock.RED;
+			case ETypeBlock.APPLE:
+				this.GetComponent<Image>().sprite = this.Apple;
+				this.Type = ETypeBlock.APPLE;
                 break;
-			case ETypeBlock.GREEN:
-				this.GetComponent<Image>().sprite = this.Green;
-                this.Type = ETypeBlock.GREEN;
+			case ETypeBlock.WATERMELON:
+				this.GetComponent<Image>().sprite = this.WaterMelon;
+                this.Type = ETypeBlock.WATERMELON;
                 break;
-			case ETypeBlock.YELLOW:
-				this.GetComponent<Image>().sprite = this.Yellow;
-                this.Type = ETypeBlock.YELLOW;
+			case ETypeBlock.MANGO:
+				this.GetComponent<Image>().sprite = this.Mango;
+                this.Type = ETypeBlock.MANGO;
                 break;
-			case ETypeBlock.BLUE:
-				this.GetComponent<Image>().sprite = this.Blue;
-                this.Type = ETypeBlock.BLUE;
+			case ETypeBlock.CHERRY:
+				this.GetComponent<Image>().sprite = this.Cherry;
+                this.Type = ETypeBlock.CHERRY;
                 break;
 		}
 	}

@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.0000038146973, y: 0}
+  m_AnchoredPosition: {x: -0.29999924, y: -12.3}
   m_SizeDelta: {x: 78.333, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &8022434286479872707
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 12
+  m_text: 123
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -92,13 +92,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
@@ -160,7 +160,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3797782776142331095}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -171,7 +171,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 166, y: 294}
-  m_SizeDelta: {x: 78.333336, y: 76.666664}
+  m_SizeDelta: {x: 43, y: 43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7819650521960864315
 CanvasRenderer:
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0927c01cd3b7a254fb30b764a8e30ea5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 991e6fac12d20cf4b88e919a663d74be, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -224,7 +224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIText_NumberNeed: {fileID: 3076342119430483342}
-  Red: {fileID: 21300000, guid: 16b5021fbd0bfac43b02d30a102c8234, type: 3}
-  Green: {fileID: 21300000, guid: 2d577965552de0047a32b23a921719ee, type: 3}
-  Blue: {fileID: 21300000, guid: 0927c01cd3b7a254fb30b764a8e30ea5, type: 3}
-  Yellow: {fileID: 21300000, guid: c967f21ad312efe4ea0ecc72e68c4709, type: 3}
+  Apple: {fileID: 21300000, guid: 991e6fac12d20cf4b88e919a663d74be, type: 3}
+  WaterMelon: {fileID: 21300000, guid: e41f183261bf8204a98c9a2f7989494e, type: 3}
+  Cherry: {fileID: 21300000, guid: 37005a5369547524c8822bdbd5b9d0ba, type: 3}
+  Mango: {fileID: 21300000, guid: 2c367c9040620404eae492c1bc340f3d, type: 3}
+  Type: 0
