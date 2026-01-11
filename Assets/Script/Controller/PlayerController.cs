@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
 	#region serilize field	
 	/// <summary>
@@ -26,15 +26,14 @@ public class PlayerController : MonoBehaviour
 	private FrameShoot frameShoot;
 	#endregion
 
+	#region public field
+	public FrameShoot FrameShoot=>this.frameShoot;
+	#endregion
+
 	#region function monobehaviour
 	private void Start()
 	{
 		this.Initialize();
-	}
-	private void Update()
-	{
-		this.frameShoot.Move();
-		this.Shoot();
 	}
 	#endregion
 
@@ -56,18 +55,22 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	public void Shoot()
 	{
-        // Nếu mà nó nhấn phím Q và có thể di chuyển
-        if (Input.GetKeyDown(KeyCode.Q))
-			if(ScoreManager.Instance.IsHaveTurn())
+		if(ScoreManager.Instance.IsHaveTurn())
 		{
 			/// trừ điểm nó đi
 			ScoreManager.Instance.MoveSub();
             this.frameShoot.currentCell.Move(speed * 300);
 			this.frameShoot.currentCell.gameObject.transform.SetParent(null);
-			this.frameShoot.currentCell=null;
-			/// sinh lại để bắn tiếp
-			this.frameShoot.SpawnBulletSquare();
+			this.frameShoot.currentCell.SetFxVisible(false);
+			this.frameShoot.currentCell=null;		
 		}
+	}
+	///
+	public Vector3 GetPositionMouse()
+	{
+		Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		pos.z = 0;
+		return pos;
 	}
 	#endregion
 }

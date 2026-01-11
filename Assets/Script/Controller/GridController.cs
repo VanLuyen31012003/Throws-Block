@@ -310,9 +310,11 @@ public class GridManager : MonoBehaviour
 	}
 	private void DetermineCheckWinOrTranslate(int i, int j)
 	{
-		Debug.LogWarning("vao dertermine");
 		if (ScoreManager.Instance.CheckWin())
-            return;
+		{
+			PlayerController.Instance.FrameShoot.SpawnBulletSquare();
+			return;
+		}			
         // dịch ô nếu cần
         if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
         {
@@ -325,7 +327,8 @@ public class GridManager : MonoBehaviour
             ScoreManager.Instance.ShowLose();
         }
 		this.SetPlusForCellInGrid();
-    }	
+		PlayerController.Instance.FrameShoot.SpawnBulletSquare();
+	}	
 
 	public void TranslateCell(int rowIndex, int col)
 	{
@@ -433,7 +436,6 @@ public class GridManager : MonoBehaviour
 	/// </summary>
 	private void AddPoint(Action actionCb,ETypeBlock typeKey)
 	{
-		
 		int point = ScoreManager.Instance.AddPoint(this.dicCurrentLast[typeKey].GetTotalSuareSameTypeOntop(), typeKey, out int totalRemainPoint);
 		// kiểm tra xe ô cuối lớn hơn không thì tức là nó đủ đk xóa rồi
 		if (point > 0)

@@ -29,7 +29,29 @@ public class FrameShoot : MonoBehaviour
 	public float maxWidth;
 	public float speed = 0.01f;
 	public Cell currentCell;
+	private Vector3 _positionFrameOffset;
+	private Camera _camera;
+	#endregion
 
+	#region function Monobehaviour
+	private void OnMouseDown()
+	{
+		this._positionFrameOffset = this.transform.position - this.GetPositionMouse();
+		this._positionFrameOffset.z = 0;
+	}
+	private void OnMouseDrag()
+	{
+		Vector3 pos = this.GetPositionMouse() + this._positionFrameOffset;
+		// nếu pos vượt quá độ dài chia nửa thì đ cho di chuyển nữa
+		if (Math.Abs(pos.x) < maxWidth)
+		{
+			this.transform.position = new Vector3(pos.x, this.transform.position.y);
+		}
+	}
+	private void OnMouseUp()
+	{
+		PlayerController.Instance.Shoot();
+	}
 	#endregion
 
 	#region Function Logic
@@ -69,6 +91,12 @@ public class FrameShoot : MonoBehaviour
 		} while (typeSecond == this.ETypeBlockRandom);
 		this.currentCell.SpawnBlock(typeSecond, count);
 
+	}
+	public Vector3 GetPositionMouse()
+	{
+		Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		pos.z = 0;
+		return pos;
 	}
 	#endregion
 }

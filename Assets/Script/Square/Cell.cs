@@ -32,6 +32,12 @@ public class Cell :MonoBehaviour
 	private GameObject SquarePrefapBlue;
 
 	/// <summary>
+	/// fx của cell lúc bắn
+	/// </summary>
+	[SerializeField]
+	private GameObject FxAnim;
+
+	/// <summary>
 	/// text tổng số square block ở trên cùng chung loại
 	/// </summary>
 	public TextMesh TotalNumberSquareTopSameType;
@@ -493,6 +499,10 @@ public class Cell :MonoBehaviour
         }
 		return listSquare;
     }
+	public void SetFxVisible(bool value)
+	{
+		this.FxAnim.SetActive(value);
+	}
     #endregion
 
 }
