@@ -447,7 +447,7 @@
     },
 
     {
-      "level": 3,
+      "level": 1,
       "rows": 8,
       "cols": 8,
       "numberInARound": 12,
@@ -628,7 +628,7 @@
     },
 
     {
-      "level": 1,
+      "level": 3,
       "rows": 6,
       "cols": 8,
       "numberInARound": 15,

@@ -50,6 +50,11 @@ public class Cell :MonoBehaviour
 	private Rigidbody2D rb;
 
 	/// <summary>
+	/// sprite renderer quản lý ảnh plus
+	/// </summary>
+	private SpriteRenderer sprite;
+
+	/// <summary>
 	/// Quản lý độ dài của cái ô square này
 	/// </summary>
 	private float _lengthSquare;
@@ -72,6 +77,7 @@ public class Cell :MonoBehaviour
 	{
 		this.rb = GetComponent<Rigidbody2D>();
 		this._lengthSquare = this.GetComponent<SpriteRenderer>().bounds.size.x;
+		this.sprite=this.GetComponent<SpriteRenderer>();
 	}
 	private void Update()
 	{
@@ -180,20 +186,30 @@ public class Cell :MonoBehaviour
     /// <summary>
     /// Tính toán lại tổng số ô trên cùng có same type
     /// </summary>
-    public void SetTextNumberTotalSameType()
+    public void SetTextNumberTotalSameType(bool isFirstCol=false)
 	{
 		//this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 		// tức là nó đang rỗng
 		this.TotalNumberSquareTopSameType.gameObject.SetActive(true);
 		if (lstBlock.Count<=0)
 		{
-			this.TotalNumberSquareTopSameType.text = "+";
+			if(isFirstCol)
+			{
+				this.TotalNumberSquareTopSameType.text = "+";
+				this.sprite.enabled = true;
+			}
+			else
+			{
+				this.TotalNumberSquareTopSameType.text = "";
+				this.sprite.enabled = false;
+			}
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = this.transform.position;
 		}
 		else
 		{
 			this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
+			this.sprite.enabled = false;
 		}
 		this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
 

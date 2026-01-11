@@ -20,7 +20,7 @@ public class GridManager : MonoBehaviour
 	/// Img background
 	/// </summary>
 	[SerializeField]
-	private GameObject ImgBackground;
+	private CellBackGround ImgBackground;
 
 	/// <summary>
 	/// space giữa các item trong grid
@@ -105,12 +105,13 @@ public class GridManager : MonoBehaviour
 
 		float startX = -totalWidth / 2f + _width / 2f;
 		float startY = totalHeight / 2f - _height / 2f;
-
+		int k = 0;
 		for (int i = 0; i < this._row; i++)
 		{
+			k = i;
 			for (int j = 0; j < this._col; j++)
 			{
-				GameObject imgBg = Instantiate(this.ImgBackground, this.transform);
+				CellBackGround imgBg = Instantiate<CellBackGround>(this.ImgBackground, this.transform);
 				GameObject gridItem = Instantiate(SquarePrefap, this.transform);
 
 				float posX = startX + j * _width;
@@ -118,6 +119,7 @@ public class GridManager : MonoBehaviour
 
 				gridItem.transform.localPosition = new Vector2(posX, posY);
 				imgBg.transform.localPosition = new Vector2(posX, posY);
+				imgBg.SetData(k);
 
 				CellGrid[i, j] = gridItem.GetComponent<Cell>();
 				CellGrid[i, j].x = i;
@@ -137,9 +139,11 @@ public class GridManager : MonoBehaviour
 				}
 
 				countIndex++;
+				k++;
 			}
 		}
 		this.transform.position = new Vector2(0, 0.37f);
+		this.SetPlusForCellInGrid();
 	}
 
 	///  hàm này sẽ để merge ô bắn từ slide lên
@@ -306,7 +310,8 @@ public class GridManager : MonoBehaviour
 	}
 	private void DetermineCheckWinOrTranslate(int i, int j)
 	{
-        if (ScoreManager.Instance.CheckWin())
+		Debug.LogWarning("vao dertermine");
+		if (ScoreManager.Instance.CheckWin())
             return;
         // dịch ô nếu cần
         if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
@@ -319,6 +324,7 @@ public class GridManager : MonoBehaviour
         {
             ScoreManager.Instance.ShowLose();
         }
+		this.SetPlusForCellInGrid();
     }	
 
 	public void TranslateCell(int rowIndex, int col)
@@ -390,8 +396,12 @@ public class GridManager : MonoBehaviour
 	// hàm trả về cell trên ô hiện tại có đang không có phần tử nào không
 	public bool CheckNone(int i, int j)
 	{
+		if(this.GetCell(i-1,j)==null)
+		{
+			return true;
+		}	
 		bool x = this.GetCell(i -1, j).lstBlock.Count > 0;
-		Debug.Log("giá trị của checknone là:"+x);
+		//Debug.Log("giá trị của checknone là:"+x);
 		return this.GetCell(i-1, j).lstBlock.Count > 0;
 	}
 	/// <summary>
@@ -479,6 +489,7 @@ public class GridManager : MonoBehaviour
 					Debug.Log("Vào logic add point xóa tất cả vì k tìm thấy thằng nào ");
 					this.dicCurrentLast[typeKey].ClearListSquareHaveSameTypeOnTop();
 					this.dicCurrentLast[typeKey].SetTextNumberTotalSameType();
+					actionCb?.Invoke();
 					return;
 				}
 				Sequence sequenceMove =DOTween.Sequence();
@@ -628,5 +639,42 @@ public class GridManager : MonoBehaviour
 		cell.SpawnBlockAnim(typeBlock,count, cellAdd.lstBlock.Count);
         return cell;
     }
-    #endregion
+	/// <summary>
+	/// hàm này để 
+	/// </summary>
+	public void SetPlusForCellInGrid()
+	{
+		string s = "Giá trị của cell được set text là:";
+		for(int i=0;i<this._col;i++)
+		{
+			this.GetCellLastEmpty(i).SetTextNumberTotalSameType(true);
+		}
+	}
+	public Cell GetCellLastEmpty(int col)
+	{
+		for (int i = this._row - 1; i >= 0; i--)
+		{
+			Cell current = this.GetCell(i, col);
+
+			if (current.lstBlock.Count == 0)
+			{
+				if (i == 0)
+				{
+					return current;
+				}
+				Cell above = this.GetCell(i - 1, col);
+				if (above.lstBlock.Count != 0)
+				{
+					return current;
+				}
+				if (above.lstBlock.Count == 0)
+				{
+					current.SetTextNumberTotalSameType();
+				}
+			}
+		}
+		return null;
+	}
+
+	#endregion
 }

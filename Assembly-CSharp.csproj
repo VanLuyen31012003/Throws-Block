@@ -78,6 +78,7 @@
     <Compile Include="Assets\Script\UI\UIcore\UIPopupController.cs" />
     <Compile Include="Assets\Script\SliderShoot\FrameShoot\FrameShoot.cs" />
     <Compile Include="Assets\Script\Controller\GameManager.cs" />
+    <Compile Include="Assets\Script\Square\CellBackGround.cs" />
     <Compile Include="Assets\Script\UI\PopupWin\UIPopupWin.cs" />
     <Compile Include="Assets\Script\Controller\GridController.cs" />
   </ItemGroup>
