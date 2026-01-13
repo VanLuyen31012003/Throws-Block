@@ -87,9 +87,9 @@ public class GridManager : MonoBehaviour
 		this._col = levelConfig.cols;
 		this.CellGrid = new Cell[_row, _col];
 		this.levelConfig = levelConfig;
-		SpriteRenderer spriteRenderer = ImgBackground.GetComponent<SpriteRenderer>();
-		this._width = spriteRenderer.sprite.bounds.size.x;
-		this._height = spriteRenderer.sprite.bounds.size.y;
+		RectTransform rect = ImgBackground.GetComponent<RectTransform>();
+		this._width = rect.rect.width;
+		this._height = rect.rect.height;
 		this.BuildGridLayout();
 	}
 
@@ -142,7 +142,7 @@ public class GridManager : MonoBehaviour
 				k++;
 			}
 		}
-		this.transform.position = new Vector2(0, 0.37f);
+		this.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 		this.SetPlusForCellInGrid();
 	}
 

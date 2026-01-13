@@ -19,6 +19,6 @@ public class CellBackGround : MonoBehaviour
 
 	public void SetData(int type)
 	{
-		this.GetComponent<SpriteRenderer>().sprite =type%2==0? this.BgEven:this.BgOdd;
+		this.GetComponent<Image>().sprite =type%2==0? this.BgEven:this.BgOdd;
     }
 }

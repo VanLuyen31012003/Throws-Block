@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Cell :MonoBehaviour
 {
@@ -11,25 +13,30 @@ public class Cell :MonoBehaviour
 	/// prefap của  square ô xanh
 	/// </summary>
 	[SerializeField]
-	private GameObject SquarePrefapGreen;
+	private GameObject SquarePrefapWaterMelon;
 
 	/// <summary>
 	/// prefap của  square ô đỏ
 	/// </summary>
 	[SerializeField]
-	private GameObject SquarePrefapRed;
+	private GameObject SquarePrefapApple;
 
 	/// <summary>
 	/// prefap của  square ô vàng
 	/// </summary>
 	[SerializeField]
-	private GameObject SquarePrefapYellow;
+	private GameObject SquarePrefapMango;
 
 	/// <summary>
 	/// prefap của  square ô xanh dương
 	/// </summary>
 	[SerializeField]
-	private GameObject SquarePrefapBlue;
+	private GameObject SquarePrefapCherry;
+	/// <summary>
+	/// prefap của  square ô peach
+	/// </summary>
+	[SerializeField]
+	private GameObject SquarePrefapPeach;
 
 	/// <summary>
 	/// fx của cell lúc bắn
@@ -40,7 +47,7 @@ public class Cell :MonoBehaviour
 	/// <summary>
 	/// text tổng số square block ở trên cùng chung loại
 	/// </summary>
-	public TextMesh TotalNumberSquareTopSameType;
+	public TextMeshProUGUI TotalNumberSquareTopSameType;
 
 	/// <summary>
 	/// độ dài cộng thêm cho tia ray
@@ -51,14 +58,9 @@ public class Cell :MonoBehaviour
 
 	#region  Private Field
 	/// <summary>
-	/// rigid quản lý tác động vật lý
+	/// _image renderer quản lý ảnh plus
 	/// </summary>
-	private Rigidbody2D rb;
-
-	/// <summary>
-	/// sprite renderer quản lý ảnh plus
-	/// </summary>
-	private SpriteRenderer sprite;
+	private Image _image;
 
 	/// <summary>
 	/// Quản lý độ dài của cái ô square này
@@ -81,16 +83,8 @@ public class Cell :MonoBehaviour
 	#region Function MonoBehaviour
 	private void Awake()
 	{
-		this.rb = GetComponent<Rigidbody2D>();
-		this._lengthSquare = this.GetComponent<SpriteRenderer>().bounds.size.x;
-		this.sprite=this.GetComponent<SpriteRenderer>();
-	}
-	private void Update()
-	{
-		if (this.rb.velocity.y > 0)
-		{
-			ShootRaycast();
-		}
+		this._lengthSquare = this.GetComponent<RectTransform>().rect.width;
+		this._image= this.GetComponent<Image>();
 	}
 	#endregion
 
@@ -105,16 +99,19 @@ public class Cell :MonoBehaviour
 		switch (type)
 		{
 			case ETypeBlock.APPLE:
-				prefapInst = this.SquarePrefapRed;
+				prefapInst = this.SquarePrefapApple;
 				break;
 			case ETypeBlock.WATERMELON:
-				prefapInst = this.SquarePrefapGreen;
+				prefapInst = this.SquarePrefapWaterMelon;
 				break;
 			case ETypeBlock.MANGO:
-				prefapInst = this.SquarePrefapYellow;
+				prefapInst = this.SquarePrefapMango;
 				break;
 			case ETypeBlock.CHERRY:	
-				prefapInst = this.SquarePrefapBlue;
+				prefapInst = this.SquarePrefapCherry;
+				break;
+			case ETypeBlock.PEACH:
+				prefapInst = this.SquarePrefapPeach;
 				break;
 			case ETypeBlock.NONE:
 				break;
@@ -125,14 +122,8 @@ public class Cell :MonoBehaviour
 			for (int i = 0; i < count; i++)
 			{
 				GameObject block = Instantiate(prefapInst, this.transform);
-				float y = (float)(lstBlock.Count + 1) / 15f;
-				block.transform.localPosition = new Vector2(0, y);
-				//block.transform.localPosition = Vector2.zero;	
-
-				//Debug.Log("x:"+block.transform.position.x);
-				//Debug.Log("y:" + block.transform.position.y);
-				// thêm thằng này đê nó hiển thị trên
-				block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
+				float y = (float)(lstBlock.Count)*6;
+				block.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, y);
 				block.SetActive(true);
 				lstBlock.Add(block);
 			}
@@ -151,16 +142,16 @@ public class Cell :MonoBehaviour
         switch (type)
         {
             case ETypeBlock.APPLE:
-                prefapInst = this.SquarePrefapRed;
+                prefapInst = this.SquarePrefapApple;
                 break;
             case ETypeBlock.WATERMELON:
-                prefapInst = this.SquarePrefapGreen;
+                prefapInst = this.SquarePrefapWaterMelon;
                 break;
             case ETypeBlock.MANGO:
-                prefapInst = this.SquarePrefapYellow;
+                prefapInst = this.SquarePrefapMango;
                 break;
             case ETypeBlock.CHERRY:
-                prefapInst = this.SquarePrefapBlue;
+                prefapInst = this.SquarePrefapCherry;
                 break;
             case ETypeBlock.NONE:
                 break;
@@ -173,12 +164,6 @@ public class Cell :MonoBehaviour
                 GameObject block = Instantiate(prefapInst, this.transform);
                 float y = (float)(lstBlock.Count + 1) / 15f;
                 block.transform.localPosition = new Vector2(0, y);
-                //block.transform.localPosition = Vector2.zero;	
-
-                //Debug.Log("x:"+block.transform.position.x);
-                //Debug.Log("y:" + block.transform.position.y);
-                // thêm thằng này đê nó hiển thị trên
-                block.GetComponent<SpriteRenderer>().sortingOrder =listCount+ lstBlock.Count + 1;
                 block.SetActive(true);
                 lstBlock.Add(block);
             }
@@ -202,12 +187,12 @@ public class Cell :MonoBehaviour
 			if(isFirstCol)
 			{
 				this.TotalNumberSquareTopSameType.text = "+";
-				this.sprite.enabled = true;
+				this._image.enabled = true;
 			}
 			else
 			{
 				this.TotalNumberSquareTopSameType.text = "";
-				this.sprite.enabled = false;
+				this._image.enabled = false;
 			}
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = this.transform.position;
 		}
@@ -215,9 +200,9 @@ public class Cell :MonoBehaviour
 		{
 			this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
 			this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
-			this.sprite.enabled = false;
+			this._image.enabled = false;
 		}
-		this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count;
+		this.TotalNumberSquareTopSameType.transform.SetAsLastSibling();
 
 	}
 	public void SetVisibleTextNumberTotalSameType(bool value)
@@ -389,122 +374,16 @@ public class Cell :MonoBehaviour
 	#region Move and Collider
 	public void Move(float speed)
 	{
-		Vector2 veloCache = rb.velocity;
-		this.rb.velocity = new Vector2(veloCache.x, speed);
-	}
-	public void ShootRaycast()
-	{
-		RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector2.up, this._lengthSquare / 2 + this.length, GameManager.Instance.LayerMaskCell);
-		Debug.DrawRay(this.transform.position, Vector2.up * (this._lengthSquare / 2 + this.length), Color.red, Time.deltaTime);
-		if (hit.collider != null && hit.collider.CompareTag("Cell"))
-		{
-			if (hit.distance <= this._lengthSquare)
-			{
-				/// lấy ra thằng cell mà nó bắn ray cast trúng
-				Cell cellCollison = hit.collider.gameObject.GetComponent<Cell>();
-			
-				// keiemr trả xem ô phía trên ô bắn tia ray trúng đang có dữ liệu không, nếu có thì gọi hàm merge, khôn thì bay tiếp
-				if(GameManager.Instance.GridManager.CheckNone(cellCollison.x, cellCollison.y))
-				{
-					this.rb.velocity = Vector2.zero;
-					GameManager.Instance.GridManager.MergeToNoneBlock(cellCollison.x, cellCollison.y, this);
-
-				}
-			}
-		}
-	}
-	public void JumpSquareToCell(GameObject square, Cell targetCell, int order)
-	{
-		square.transform.SetParent(null); // tạm thời tách ra
-
-		Vector3 startPos = square.transform.position;
-
-		// vị trí đích dựa theo số block hiện có
-		Vector3 targetPos = targetCell.transform.position +
-			Vector3.up * ((targetCell.lstBlock.Count + 1) / 15f);
-
-		float duration = 0.25f;
-		float delay = order * 0.05f;
-
-		square.transform
-			.DOJump(targetPos, 0.6f, 1, duration)
-			.SetDelay(delay)
-			.SetEase(Ease.OutQuad)
-			.OnComplete(() =>
-			{
-				// khi nhảy xong mới add vào cell
-				targetCell.AddSquare(square);
-			});
-	}
-	// trả về vị trí nên xếp
-	public Vector3 GetNextSquareWorldPos()
-	{
-		float offsetY = 0.15f; // khoảng cách xếp chồng
-		return transform.position + Vector3.up * lstBlock.Count * offsetY;
-	}
-	/// <summary>
-	/// Lấy ra thứ tự sorting layer nên set
-	/// </summary>
-	/// <returns></returns>
-	public int GetSlotSortingLayer( int indexSquare)
-	{
-		return this.lstBlock.Count+ indexSquare;
-	}
-	/// <summary>
-	/// Trả về vị trí để merge anim
-	/// </summary>
-	/// <returns></returns>
-	public Vector3 GetPostionMove(int indexSquare)
-	{
-		Vector3 pos = this.transform.position;
-		pos.y = (float)(lstBlock.Count + indexSquare) / 15f;
-		return pos;
+		
 	}
     #endregion
 
-    #region Instantiate Suqare
-    public List<GameObject> SpawnSquare(ETypeBlock typeBlock,int count)
-	{
-		List<GameObject> listSquare = new List<GameObject>();
-		for(int i=0;i<count;i++)
-		{
-			GameObject prefapInst = null;
-			switch (typeBlock)
-			{
-				case ETypeBlock.APPLE:
-					prefapInst = this.SquarePrefapRed;
-					break;
-				case ETypeBlock.WATERMELON:
-					prefapInst = this.SquarePrefapGreen;
-					break;
-				case ETypeBlock.MANGO:
-					prefapInst = this.SquarePrefapYellow;
-					break;
-				case ETypeBlock.CHERRY:
-					prefapInst = this.SquarePrefapBlue;
-					break;
-				case ETypeBlock.NONE:
-					break;
-			}
-			if (prefapInst != null)
-			{
-				GameObject block = Instantiate(prefapInst);
-				Vector2 pos = this.transform.position;
-                float y = (float)(lstBlock.Count + 1) / 15f;
-                block.transform.position = new Vector3(pos.x,pos.y+ y);
-                block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
-                block.SetActive(true);
-				listSquare.Add(block);
-            }
-        }
-		return listSquare;
-    }
+    #region Set fx
 	public void SetFxVisible(bool value)
 	{
 		this.FxAnim.SetActive(value);
 	}
     #endregion
-
 }
 public enum ETypeBlock
 {
@@ -513,5 +392,6 @@ public enum ETypeBlock
 	WATERMELON=2,
 	CHERRY=3,
 	MANGO=4,
+	PEACH=5
 
 }

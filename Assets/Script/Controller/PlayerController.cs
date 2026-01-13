@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 public class PlayerController : Singleton<PlayerController>
 {
@@ -28,12 +29,43 @@ public class PlayerController : Singleton<PlayerController>
 
 	#region public field
 	public FrameShoot FrameShoot=>this.frameShoot;
+
+	public bool isDragging;
 	#endregion
 
 	#region function monobehaviour
+	private RectTransform parentRect;
+	private RectTransform frameRect;
+
 	private void Start()
 	{
 		this.Initialize();
+
+		frameRect = frameShoot.GetComponent<RectTransform>();
+		parentRect = frameRect.parent.GetComponent<RectTransform>();
+	}
+
+	private void Update()
+	{
+		if (!isDragging) return;
+
+		Vector2 localPoint;
+		RectTransformUtility.ScreenPointToLocalPointInRectangle(
+			parentRect,
+			Input.mousePosition,
+			null,
+			out localPoint
+		);
+
+		float halfParentWidth = parentRect.rect.width / 2f;
+		float halfFrameWidth = frameRect.rect.width / 2f;
+
+		float minX = -halfParentWidth + halfFrameWidth;
+		float maxX = halfParentWidth - halfFrameWidth;
+
+		float clampedX = Mathf.Clamp(localPoint.x, minX, maxX);
+
+		frameRect.anchoredPosition = new Vector2(clampedX, frameRect.anchoredPosition.y);
 	}
 	#endregion
 
@@ -43,8 +75,7 @@ public class PlayerController : Singleton<PlayerController>
 	/// </summary>
 	private void Initialize()
 	{
-		SpriteRenderer sprite = this.gameObject.GetComponent<SpriteRenderer>();
-		this.width = sprite.bounds.size.x / 2;
+		this.width = this.GetComponent<RectTransform>().rect.width/2;
 		this.frameShoot.maxWidth = this.width;
 		this.frameShoot.speed = this.speed;
 		this.frameShoot.SpawnBulletSquare();
@@ -59,18 +90,18 @@ public class PlayerController : Singleton<PlayerController>
 		{
 			/// trừ điểm nó đi
 			ScoreManager.Instance.MoveSub();
-            this.frameShoot.currentCell.Move(speed * 300);
 			this.frameShoot.currentCell.gameObject.transform.SetParent(null);
 			this.frameShoot.currentCell.SetFxVisible(false);
 			this.frameShoot.currentCell=null;		
 		}
 	}
-	///
-	public Vector3 GetPositionMouse()
+	public void OnPointerDown()
 	{
-		Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		pos.z = 0;
-		return pos;
+		this.isDragging= true;
+	}
+	public void OnPointerUp()
+	{
+		this.isDragging = false;
 	}
 	#endregion
 }

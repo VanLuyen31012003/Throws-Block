@@ -48,7 +48,7 @@ public class TargetPrefapUI : MonoBehaviour
     #region Function MonoBehaviour
     //public void Start()
     //{
-    //	this.GetComponent<Image>().sprite=null;
+    //	this.GetComponent<Image>()._image=null;
     //}
     #endregion
 
