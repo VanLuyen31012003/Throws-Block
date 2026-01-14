@@ -3983,7 +3983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1569561844
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4138,7 +4138,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: {fileID: 954494286}
-  maxWidth: 0
   speed: 0.01
   currentCell: {fileID: 0}
 --- !u!114 &1594878864
@@ -5111,6 +5110,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6860352718875775923, guid: 33327773849bf6c4ba25245d9f51ba3f, type: 3}
+      propertyPath: FxAnim
+      value: 
+      objectReference: {fileID: 1863726106}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
