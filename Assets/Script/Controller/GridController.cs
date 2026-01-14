@@ -677,6 +677,12 @@ public class GridManager : MonoBehaviour
 		}
 		return null;
 	}
-
+	public (float min,float max,float widthCell, int col) GetMinMaxWidth()
+	{
+		float witdh= this._width*this._col;
+		float min = -witdh/2 + this._width/2;
+		float max = witdh/2- this._width/2;
+		return (min,max,this._width,this._col);
+	}
 	#endregion
 }

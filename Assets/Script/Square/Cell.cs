@@ -219,8 +219,7 @@ public class Cell :MonoBehaviour
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count + 1) / 15f;
-		block.transform.localPosition = new Vector3(0, y);
-		block.GetComponent<SpriteRenderer>().sortingOrder = lstBlock.Count + 1;
+		block.transform.localPosition = new Vector2(0, y);
 		lstBlock.Add(block);
 		this.SetTextNumberTotalSameType();
 	}
