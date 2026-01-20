@@ -20,6 +20,22 @@ public static class StaticControl
     /// giá trị thời gian thực hiện anim gối đầu của dotween
     /// </summary>
     public static float TIME_DOTWEEN_CONTINUOUS_ANIM = 0.1f;
-    #endregion
+	/// <summary>
+	/// giá trị thời gian thực hiện anim scale cho object
+	/// </summary>
+	public static float TIME_DOTWEEN_SCALE_ANIM = 0.2f;
+	#endregion
+
+	#region Value Divide Translate
+	/// <summary>
+	/// Giá trị chia để dịch square
+	/// </summary>
+	public static int VALUE_DEVIDE = 6;
+
+	/// <summary>
+	/// Giá trị để dịch cell lên y 1 đoạn
+	/// </summary>
+	public static int VALUE_TRANSLATETOP = 60;
+	#endregion
 
 }

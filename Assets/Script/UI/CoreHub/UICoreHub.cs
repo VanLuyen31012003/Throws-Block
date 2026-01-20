@@ -103,7 +103,7 @@ public class UICoreHub : MonoBehaviour
 	public Vector3 GetPositionSquareMission(ETypeBlock type)
 	{
 		if (listTargetUI.Any(x => x.Type == type))
-			return this.UIToWorldPosition(listTargetUI.Where(x=>x.Type==type).FirstOrDefault().GetComponent<RectTransform>());
+			return listTargetUI.Where(x=>x.Type==type).FirstOrDefault().GetComponent<RectTransform>().position;
 		return Vector3.zero;
 	}
 	public Vector3 UIToWorldPosition(RectTransform uiRect)

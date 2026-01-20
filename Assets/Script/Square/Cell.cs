@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Cell :MonoBehaviour
+public class Cell :MonoBehaviour, IPointerClickHandler
 {
 	#region serilize field
 	/// <summary>
@@ -48,12 +50,6 @@ public class Cell :MonoBehaviour
 	/// text tổng số square block ở trên cùng chung loại
 	/// </summary>
 	public TextMeshProUGUI TotalNumberSquareTopSameType;
-
-	/// <summary>
-	/// độ dài cộng thêm cho tia ray
-	/// </summary>
-	[SerializeField]
-	private float length = 0.1f;
 	#endregion
 
 	#region  Private Field
@@ -162,7 +158,7 @@ public class Cell :MonoBehaviour
             for (int i = 0; i < count; i++)
             {
                 GameObject block = Instantiate(prefapInst, this.transform);
-                float y = (float)(lstBlock.Count + 1) / 15f;
+                float y = (float)(lstBlock.Count + 1)*StaticControl.VALUE_DEVIDE;
                 block.transform.localPosition = new Vector2(0, y);
                 block.SetActive(true);
                 lstBlock.Add(block);
@@ -171,9 +167,10 @@ public class Cell :MonoBehaviour
         this.TotalNumberSquareTopSameType.gameObject.SetActive(true);
         this.TotalNumberSquareTopSameType.text = this.GetTotalSuareSameTypeOntop().ToString();
         this.TotalNumberSquareTopSameType.gameObject.transform.position = lstBlock.Last().transform.position;
-        this.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = lstBlock.Count+listCount;
+		this.TotalNumberSquareTopSameType.transform.SetAsLastSibling();
 
-    }
+
+	}
     /// <summary>
     /// Tính toán lại tổng số ô trên cùng có same type
     /// </summary>
@@ -218,7 +215,7 @@ public class Cell :MonoBehaviour
 	public void AddSquare(GameObject block)
 	{
 		block.transform.SetParent(this.transform);
-		float y = (float)(lstBlock.Count + 1) / 15f;
+		float y = (float)(lstBlock.Count) * StaticControl.VALUE_DEVIDE;
 		block.transform.localPosition = new Vector2(0, y);
 		lstBlock.Add(block);
 		this.SetTextNumberTotalSameType();
@@ -346,6 +343,15 @@ public class Cell :MonoBehaviour
 	{
 		this.lstBlock.Clear();
 	}
+	public void DestroyListGameObj()
+	{
+		foreach(var square in this.lstBlock)
+		{
+			Destroy(square);
+		}	
+		this.lstBlock.Clear();
+		this.SetTextNumberTotalSameType();
+	}
 	/// <summary>
 	/// Clear các square có cùng type ở đầu
 	/// </summary>
@@ -370,19 +376,25 @@ public class Cell :MonoBehaviour
 	}
 	#endregion
 
-	#region Move and Collider
-	public void Move(float speed)
-	{
-		
-	}
-    #endregion
-
     #region Set fx
 	public void SetFxVisible(bool value)
 	{
 		this.FxAnim.SetActive(value);
 	}
-    #endregion
+	public void SetImageVisible(bool value)
+	{
+		this._image.enabled = value;
+	}
+	public void OnPointerClick(PointerEventData eventData)
+	{
+		Debug.Log("Clicked UI Object");
+		if (!SupportController.Instance.IsHavingSp())
+		{
+			return;
+		}
+		SupportController.Instance.ExecuteSp(this.x,this.y);
+	}
+	#endregion
 }
 public enum ETypeBlock
 {

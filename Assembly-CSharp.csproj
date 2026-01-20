@@ -66,6 +66,7 @@
     <Compile Include="Assets\Script\Controller\ScoreManager\ScoreManager.cs" />
     <Compile Include="Assets\Script\General\Singleten.cs" />
     <Compile Include="Assets\Script\UI\CoreHub\UICoreHub.cs" />
+    <Compile Include="Assets\Script\UI\UiSupport\ItemDragAndClick.cs" />
     <Compile Include="Assets\Script\UI\UIcore\BasePopup.cs" />
     <Compile Include="Assets\Script\General\ObjectPool.cs" />
     <Compile Include="Assets\Script\UtilsAndCore\StaticControl.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets\Script\UI\UIcore\UIPopupController.cs" />
     <Compile Include="Assets\Script\SliderShoot\FrameShoot\FrameShoot.cs" />
     <Compile Include="Assets\Script\Controller\GameManager.cs" />
+    <Compile Include="Assets\Script\UI\UiSupport\SupportController.cs" />
     <Compile Include="Assets\Script\Square\CellBackGround.cs" />
     <Compile Include="Assets\Script\UI\PopupWin\UIPopupWin.cs" />
     <Compile Include="Assets\Script\Controller\GridController.cs" />

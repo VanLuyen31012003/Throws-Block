@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
 		ScoreManager.Instance.SetData(levelConfigNow);
 		//set up điểm yêu cầu cho setData
 		UIManager.Instance.uICoreHub.SetData(levelConfigNow);
+		PlayerController.Instance.Refresh();
 	}
 
 	#endregion

@@ -16,12 +16,6 @@ public class PlayerController : Singleton<PlayerController>
 	private float width;
 
 	/// <summary>
-	/// tốc độ của cell
-	/// </summary>
-	[SerializeField]
-	private float speed = 0.01f;
-
-	/// <summary>
 	/// frame shoot quản lý di chuyển ô
 	/// </summary>
 	[SerializeField]
@@ -49,11 +43,6 @@ public class PlayerController : Singleton<PlayerController>
 
 		frameRect = frameShoot.GetComponent<RectTransform>();
 		parentRect = frameRect.parent.GetComponent<RectTransform>();
-		var tupple = GameManager.Instance.GridManager.GetMinMaxWidth();
-		this.maxX = tupple.max;
-		this.minX = tupple.min;
-		this.widthCell=tupple.widthCell;
-		this.colGrid = tupple.col;
 	}
 
 	private void Update()
@@ -79,7 +68,16 @@ public class PlayerController : Singleton<PlayerController>
 	{
 		this.width = this.GetComponent<RectTransform>().rect.width/2;
 		this.frameShoot.SpawnBulletSquare();
+		this.Refresh();
 	}	
+	public void Refresh()
+	{
+		var tupple = GameManager.Instance.GridManager.GetMinMaxWidth();
+		this.maxX = tupple.max;
+		this.minX = tupple.min;
+		this.widthCell = tupple.widthCell;
+		this.colGrid = tupple.col;
+	}
 
 	/// <summary>
 	/// Bắn các ô bay lên

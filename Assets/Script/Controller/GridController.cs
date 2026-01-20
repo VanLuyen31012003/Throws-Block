@@ -142,7 +142,7 @@ public class GridManager : MonoBehaviour
 				k++;
 			}
 		}
-		this.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+		this.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50);
 		this.SetPlusForCellInGrid();
 	}
 
@@ -176,55 +176,34 @@ public class GridManager : MonoBehaviour
 			stackTypes.Reverse();
 			// dic lưu dữ liệu cell và đường đi
 			Dictionary<ETypeBlock, List<Cell>> dicTypeAndPath = new Dictionary<ETypeBlock, List<Cell>>();
-			foreach (var type in stackTypes )
+			foreach (var type in stackTypes)
 			{
 				List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j], type);
-				if(path.Count>=2)
+				if (path.Count >= 2)
 				{
-                    this.dicCurrentLast.TryAdd(type, path[path.Count-1]);
-                    dicTypeAndPath.TryAdd(type,path);
+					this.dicCurrentLast.TryAdd(type, path[path.Count - 1]);
+					dicTypeAndPath.TryAdd(type, path);
 				}
 				else
 				{
 					break;
-				}	
+				}
 			}
 			// nếu có cái cần merge
-			if(dicTypeAndPath.Count>0)
+			if (dicTypeAndPath.Count > 0)
 			{
 				this.totalTypeMerge = dicTypeAndPath.Count;
-                foreach (var element in dicTypeAndPath)
+				foreach (var element in dicTypeAndPath)
 				{
 					MergeByPathAnim(element.Value, 0, element.Key);
 				}
-			}	
+			}
 			else
 			{
 				this.DetermineCheckWinOrTranslate(i, j);
-            }
+			}
 		});
 	}
-	//public void MergeToNoneBlock1(int i, int j, Cell cellMerge)
-	//{
-	//	/// bắt đầu merge
-	//	foreach (var square in cellMerge.lstBlock)
-	//	{
-	//		CellGrid[i, j].AddSquare(square);
-	//	}
-	//	// xóa thằng cell bắn này đi
-	//	Destroy(cellMerge.gameObject);
-	////	List<Cell> path = BfsPath.FindBestMergePathBFS(CellGrid[i, j]);
-
-	//	if (path.Count >= 2)
-	//	{
-	//		MergeByPathAnim(path, 0, CellGrid[i, j].GetLastSquareType());
-	//	}
-	//	else
-	//	{
-	//		this.CurrentCellLast = CellGrid[i, j];
-	//		AfterAllMergeDone(i, j);
-	//	}
-	//}
 	/// <summary>
 	///  Merge từ cell này sang cel kia theo path cho trước
 	/// </summary>
@@ -251,17 +230,15 @@ public class GridManager : MonoBehaviour
         int i = 1;
 		int j = 1;
 		int count =listSquareSameTypeTop.Count;
-        //	listSquareSameTypeTop.Reverse();
-        foreach (var sq in listSquareSameTypeTop)
+		from.SetVisibleTextNumberTotalSameType(false);
+		//	listSquareSameTypeTop.Reverse();
+		foreach (var sq in listSquareSameTypeTop)
         {
             var square = sq;
 
-            // Sorting layer
-            //square.GetComponent<SpriteRenderer>().sortingOrder = 20 - (count-i);
-
             // Vị trí bay tới
             Vector3 pos = to.transform.position
-                        + Vector3.up * ((to.lstBlock.Count + i) / 15f);
+                        + Vector3.up * ((to.lstBlock.Count + i) * StaticControl.VALUE_DEVIDE);
 
             // Insert animation gối đầu
             seq.Insert(
@@ -270,14 +247,12 @@ public class GridManager : MonoBehaviour
                     .DOMove(pos, StaticControl.TIME_DOTWEEN_DURATION_ANIM)
                     .SetEase(Ease.OutQuad)
             );
-            seq.InsertCallback(startTime , () =>
-            {
-                square.GetComponent<SpriteRenderer>().sortingOrder = 20 - (count - j);
-				j++;
-               
-            });
-            // AddSquare sau khi anim của square đó xong
-            seq.InsertCallback(startTime + StaticControl.TIME_DOTWEEN_DURATION_ANIM, () =>
+			// cái này để tạo hiệu ứng cái sau cao hơn cái trước
+			seq.InsertCallback(startTime + StaticControl.TIME_DOTWEEN_CONTINUOUS_ANIM, 
+				() => { square.transform.SetParent(to.transform); }		  
+		   ); 
+			// AddSquare sau khi anim của square đó xong
+			seq.InsertCallback(startTime + StaticControl.TIME_DOTWEEN_DURATION_ANIM, () =>
             {
                 to.AddSquare(square);
             });
@@ -287,8 +262,9 @@ public class GridManager : MonoBehaviour
 
         // Sau khi toàn bộ anim gối đầu xong → merge tiếp cell kế
         seq.OnComplete(() =>
-        {
-            MergeByPathAnim(path, index + 1, type);
+		{
+			from.SetVisibleTextNumberTotalSameType(true);
+			MergeByPathAnim(path, index + 1, type);
         });
     }
 
@@ -339,6 +315,8 @@ public class GridManager : MonoBehaviour
 			// clear dữ liệu trong list cái này đi
 			CellGrid[0, col].ClearAndDestroyListGameObj();
 			// bắt đầu dịch dữ liệu
+			float delayPerRow = 0.1f;
+			float moveDuration = 0.15f;
 			for (int row = 1; row <= rowIndex; row++)
 			{
 				// add dữ liệu block của thằng này sang thằng trước
@@ -404,7 +382,7 @@ public class GridManager : MonoBehaviour
 			return true;
 		}	
 		bool x = this.GetCell(i -1, j).lstBlock.Count > 0;
-		//Debug.Log("giá trị của checknone là:"+x);
+		//Debug.Log("giá trị của checknone là:"+i);
 		return this.GetCell(i-1, j).lstBlock.Count > 0;
 	}
 	/// <summary>
@@ -504,7 +482,7 @@ public class GridManager : MonoBehaviour
 				{
 						
 					Vector2 posCache = square.transform.position;
-					posCache.y=posCache.y+0.6f;
+					posCache.y=posCache.y+StaticControl.VALUE_TRANSLATETOP;
 					sequenceMove.Join(square.transform.DOMove(posCache, 0.3f));
                     if (k == 0)
                     {
@@ -521,12 +499,9 @@ public class GridManager : MonoBehaviour
                     cellCache.SetVisibleTextNumberTotalSameType(false);
 				});
 
-                cellPosAdd.TotalNumberSquareTopSameType.GetComponent<Renderer>().sortingOrder = 20 ;
                 foreach (var sq in lstGameObt)
                 {
                     var square = sq;
-                    //square.transform.SetParent(null);
-                    square.GetComponent<SpriteRenderer>().sortingOrder = 20 - m;
                     sequenceMove.Append(
                         square.transform
                             .DOMove(cellCache.transform.position, 0.15f)
@@ -632,12 +607,13 @@ public class GridManager : MonoBehaviour
     /// <returns></returns>
     public Cell SpawnGameObj(ETypeBlock typeBlock, int count,Cell cellAdd )
     {
-        GameObject gameObj  = Instantiate(this.SquarePrefap);
+        GameObject gameObj  = Instantiate(this.SquarePrefap,cellAdd.transform);
 		Cell cell = gameObj.GetComponent<Cell>();
         cell.transform.position = cellAdd.transform.position;
         cell.gameObject.SetActive(true);
         cell.lstBlock = new List<GameObject>();
         List<GameObject> listSquare = new List<GameObject>();
+		cell.SetImageVisible(false);
 		cell.SpawnBlockAnim(typeBlock,count, cellAdd.lstBlock.Count);
         return cell;
     }
@@ -646,7 +622,7 @@ public class GridManager : MonoBehaviour
 	/// </summary>
 	public void SetPlusForCellInGrid()
 	{
-		string s = "Giá trị của cell được set text là:";
+	//	string s = "Giá trị của cell được set text là:";
 		for(int i=0;i<this._col;i++)
 		{
 			this.GetCellLastEmpty(i).SetTextNumberTotalSameType(true);
@@ -684,5 +660,60 @@ public class GridManager : MonoBehaviour
 		float max = witdh/2- this._width/2;
 		return (min,max,this._width,this._col);
 	}
+	#endregion
+
+	#region Function Feat sp
+	/// <summary>
+	///  thực thi hiệu ứng hỗ trợ tên lửa
+	/// </summary>
+	public void DoSpROCKET(int i, int j)
+	{
+		Sequence sequence = DOTween.Sequence();
+		for(int index = 0; index < this._row; index++)
+		{
+			sequence.Join(CellGrid[index, j].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
+		}
+		sequence.OnComplete(() =>
+		{
+			for (int index = 0; index < this._row; index++)
+			{
+				CellGrid[index, j].DestroyListGameObj();
+			}
+		});
+	}
+	public void DoSpBOWLING(int i, int j)
+	{
+		Sequence sequence = DOTween.Sequence();
+		for (int dx = -1; dx <= 1; dx++)
+		{
+			for (int dy = -1; dy <= 1; dy++)
+			{
+				int nx = i + dx;
+				int ny = j + dy;
+
+				if (GetCell(nx, ny) == null)
+					continue;
+
+				sequence.Join(CellGrid[nx, ny].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
+			}
+		}
+		sequence.OnComplete(() =>
+		{
+			for (int dx = -1; dx <= 1; dx++)
+			{
+				for (int dy = -1; dy <= 1; dy++)
+				{
+
+					int nx = i + dx;
+					int ny = j + dy;
+
+					if (GetCell(nx, ny) == null)
+						continue;
+					CellGrid[nx, ny].DestroyListGameObj();
+				}
+			}
+		});
+	}
+
 	#endregion
 }
