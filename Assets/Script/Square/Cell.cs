@@ -324,6 +324,12 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 
 		return count;
 	}
+	public Dictionary<ETypeBlock,int> GetNumberSquarePerType()
+	{
+		Dictionary<ETypeBlock,int> dic = new Dictionary<ETypeBlock,int>();
+		dic = this.lstBlock.GroupBy(x => x.GetComponent<Square>().typeBlock).ToDictionary(a=> a.Key,a=>a.Count());
+		return dic;
+	}
 	/// <summary>
 	/// Clear dữ liệu trong list này đi đồng thời destroy gameobj luôn
 	/// </summary>

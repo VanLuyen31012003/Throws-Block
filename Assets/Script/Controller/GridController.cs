@@ -669,8 +669,10 @@ public class GridManager : MonoBehaviour
 	public void DoSpROCKET(int i, int j)
 	{
 		Sequence sequence = DOTween.Sequence();
-		for(int index = 0; index < this._row; index++)
+		Dictionary<ETypeBlock, int> dic = new Dictionary<ETypeBlock, int>();
+		for (int index = 0; index < this._row; index++)
 		{
+			this.MergeDic(dic, CellGrid[index, j].GetNumberSquarePerType());
 			sequence.Join(CellGrid[index, j].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
 		}
 		sequence.OnComplete(() =>
@@ -678,12 +680,24 @@ public class GridManager : MonoBehaviour
 			for (int index = 0; index < this._row; index++)
 			{
 				CellGrid[index, j].DestroyListGameObj();
+				CellGrid[index, j].transform.localScale = new Vector3(1, 1, 1);
+
+				//CellGrid[index, j].transform.DOScale(1,0.01f);
 			}
+			foreach (var e in dic)
+			{
+				ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
+
+			}
+			this.SetPlusForCellInGrid();
+			ScoreManager.Instance.CheckWin();
 		});
 	}
 	public void DoSpBOWLING(int i, int j)
 	{
 		Sequence sequence = DOTween.Sequence();
+		// dic này sẽ lưu tất cả giá trị số square ăn được từ việc dùng sp
+		Dictionary<ETypeBlock,int> dic = new Dictionary<ETypeBlock,int>();
 		for (int dx = -1; dx <= 1; dx++)
 		{
 			for (int dy = -1; dy <= 1; dy++)
@@ -693,7 +707,7 @@ public class GridManager : MonoBehaviour
 
 				if (GetCell(nx, ny) == null)
 					continue;
-
+				this.MergeDic(dic, CellGrid[nx, ny].GetNumberSquarePerType());
 				sequence.Join(CellGrid[nx, ny].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
 			}
 		}
@@ -710,10 +724,30 @@ public class GridManager : MonoBehaviour
 					if (GetCell(nx, ny) == null)
 						continue;
 					CellGrid[nx, ny].DestroyListGameObj();
+					CellGrid[nx, ny].transform.localScale = new Vector3(1,1,1);
+
+				//	CellGrid[nx, ny].transform.DOScale(1, 0.01f);
+
 				}
 			}
+			foreach(var e in dic)
+			{
+				ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
+
+			}
+			this.SetPlusForCellInGrid();
+			ScoreManager.Instance.CheckWin();
 		});
 	}
-
+	void MergeDic(Dictionary<ETypeBlock, int> target,Dictionary<ETypeBlock, int> source)
+	{
+		foreach (var kv in source)
+		{
+			if (target.ContainsKey(kv.Key))
+				target[kv.Key] += kv.Value;
+			else
+				target[kv.Key] = kv.Value;
+		}
+	}
 	#endregion
 }

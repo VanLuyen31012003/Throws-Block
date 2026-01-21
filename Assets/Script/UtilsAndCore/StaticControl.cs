@@ -9,13 +9,25 @@ public static class StaticControl
 	/// key để dùng cho việc lấy ra level hiện tại
 	/// </summary>
 	public static string KEY_LEVEL="level";
-    #endregion
+	/// <summary>
+	/// key để dùng cho việc lấy ra số lượt sử dụng suffle còn lại
+	/// </summary>
+	public static string KEY_SHUFFLE = "shuffle";
+	/// <summary>
+	/// key để dùng cho việc lấy ra số lượt sử dụng rocket còn lại
+	/// </summary>
+	public static string KEY_ROKET = "rocket";
+	/// <summary>
+	/// key để dùng cho việc lấy ra số lượt sử dụng bowling còn lại
+	/// </summary>
+	public static string KEY_BOWLING = "bowling";
+	#endregion
 
-    #region Value Time Dotween
-    /// <summary>
-    /// giá trị thời gian thực hiện anim của dotween
-    /// </summary>
-    public static float TIME_DOTWEEN_DURATION_ANIM = 0.2f;
+	#region Value Time Dotween
+	/// <summary>
+	/// giá trị thời gian thực hiện anim của dotween
+	/// </summary>
+	public static float TIME_DOTWEEN_DURATION_ANIM = 0.2f;
     /// <summary>
     /// giá trị thời gian thực hiện anim gối đầu của dotween
     /// </summary>

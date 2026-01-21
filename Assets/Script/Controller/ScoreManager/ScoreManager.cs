@@ -88,6 +88,29 @@ public class ScoreManager : MonoBehaviour
 		Debug.Log("Đã cộng thêm điểm cho target loại "+ type.ToString()+" Số ô cộng thêm là "+ totalReturn);
         return totalReturn;
     }
+	public void AddPointBySp(int TotalAdd, ETypeBlock type)
+	{
+		int totalRemainPoint = 0;
+		if (type == ETypeBlock.NONE)
+		{
+			return ;
+		}
+		// set điểm hco target
+		foreach (Target target in this.targets)
+		{
+			if ((ETypeBlock)target.type == type)
+			{
+				target.countNeed -= TotalAdd;
+				if (target.countNeed < 0)
+				{
+					target.countNeed = 0;
+				}
+				totalRemainPoint = target.countNeed;
+				break;
+			}
+		}
+		UIManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);		
+	}
 	public bool IsEnoughToMove()
 	{
 		return false;
