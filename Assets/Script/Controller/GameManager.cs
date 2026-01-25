@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour
     {
         this.Initialize();
 		// clear đi đẻ chơi từ đầu 
-
 		PlayerPrefs.DeleteAll();
 	}
 
@@ -75,6 +74,7 @@ public class GameManager : MonoBehaviour
 		//set up điểm yêu cầu cho setData
 		UIManager.Instance.uICoreHub.SetData(levelConfigNow);
 		PlayerController.Instance.Refresh();
+		SupportController.Instance.Refresh();
 	}
 
 	#endregion

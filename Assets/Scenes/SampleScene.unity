@@ -1651,6 +1651,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff380824cdfac84f8336ae8e164e43c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemShuffle: {fileID: 547333901}
+  ItemRocket: {fileID: 2120589115}
+  ItemBowling: {fileID: 885929474}
+  IsUsingSP: 0
 --- !u!1 &509657482
 GameObject:
   m_ObjectHideFlags: 0
@@ -1955,6 +1959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TypeItem: 0
   UIButton_Select: {fileID: 547333898}
+  UIText_Times: {fileID: 798056130}
 --- !u!1 &563552441
 GameObject:
   m_ObjectHideFlags: 0
@@ -3074,6 +3079,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TypeItem: 2
   UIButton_Select: {fileID: 885929471}
+  UIText_Times: {fileID: 1798333126}
 --- !u!224 &954494285 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2435826398509486798, guid: 33327773849bf6c4ba25245d9f51ba3f, type: 3}
@@ -5698,6 +5704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TypeItem: 1
   UIButton_Select: {fileID: 2120589112}
+  UIText_Times: {fileID: 1706757949}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

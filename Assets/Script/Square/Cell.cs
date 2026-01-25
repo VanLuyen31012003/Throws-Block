@@ -183,7 +183,7 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 		{
 			if(isFirstCol)
 			{
-				this.TotalNumberSquareTopSameType.text = "+";
+				//this.TotalNumberSquareTopSameType.text = "+";
 				this._image.enabled = true;
 			}
 			else
@@ -212,11 +212,12 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="block"></param>
-	public void AddSquare(GameObject block)
+	public void AddSquare(GameObject block, bool isFromTranslate = false)
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count) * StaticControl.VALUE_DEVIDE;
-		block.transform.localPosition = new Vector2(0, y);
+		if(!isFromTranslate)
+			block.transform.localPosition = new Vector2(0, y);
 		lstBlock.Add(block);
 		this.SetTextNumberTotalSameType();
 	}

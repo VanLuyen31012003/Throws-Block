@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -112,14 +113,32 @@ public class GridManager : MonoBehaviour
 			for (int j = 0; j < this._col; j++)
 			{
 				CellBackGround imgBg = Instantiate<CellBackGround>(this.ImgBackground, this.transform);
+
+				float posX = startX + j * _width;
+				float posY = startY - i * _height;
+
+				imgBg.transform.localPosition = new Vector2(posX, posY);
+				imgBg.SetData(k);
+				countIndex++;
+				k++;
+			}
+		}
+		countIndex = 0;
+		k = 0;
+		for (int i = 0; i < this._row; i++)
+		{
+			k = i;
+			for (int j = 0; j < this._col; j++)
+			{
+			//	CellBackGround imgBg = Instantiate<CellBackGround>(this.ImgBackground, this.transform);
 				GameObject gridItem = Instantiate(SquarePrefap, this.transform);
 
 				float posX = startX + j * _width;
 				float posY = startY - i * _height;
 
 				gridItem.transform.localPosition = new Vector2(posX, posY);
-				imgBg.transform.localPosition = new Vector2(posX, posY);
-				imgBg.SetData(k);
+			//	imgBg.transform.localPosition = new Vector2(posX, posY);
+				//imgBg.SetData(k);
 
 				CellGrid[i, j] = gridItem.GetComponent<Cell>();
 				CellGrid[i, j].x = i;
@@ -228,7 +247,6 @@ public class GridManager : MonoBehaviour
 
         float startTime = 0f;
         int i = 1;
-		int j = 1;
 		int count =listSquareSameTypeTop.Count;
 		from.SetVisibleTextNumberTotalSameType(false);
 		//	listSquareSameTypeTop.Reverse();
@@ -290,45 +308,68 @@ public class GridManager : MonoBehaviour
 		{
 			PlayerController.Instance.FrameShoot.SpawnBulletSquare();
 			return;
-		}			
-        // dịch ô nếu cần
-        if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
-        {
-            TranslateCell(i, j);
-        }
-
-        // hết lượt
-        if (!ScoreManager.Instance.IsHaveTurn())
-        {
-            ScoreManager.Instance.ShowLose();
-        }
+		}
+		// dịch ô nếu cần
+		if (CellGrid[i, j].lstBlock.Count > 0 && i == _row - 1)
+		{
+			TranslateCell(i, j, () =>
+			{
+				this.EnTurnPlay();
+			});
+		}
+		else
+		{
+			this.EnTurnPlay();
+		}
+	}	
+	public void EnTurnPlay()
+	{
+		// hết lượt
+		if (!ScoreManager.Instance.IsHaveTurn())
+		{
+			ScoreManager.Instance.ShowLose();
+		}
 		this.SetPlusForCellInGrid();
 		PlayerController.Instance.FrameShoot.SpawnBulletSquare();
-	}	
+		PlayerController.Instance.IsEndTurn = true;
+	}
 
-	public void TranslateCell(int rowIndex, int col)
+	public void TranslateCell(int rowIndex, int col, Action actionEndturn)
 	{
 		int checkIndex = this.GetRowCellEmpty(col);
+		Sequence sequence = DOTween.Sequence();
 		//Nếu không có ô nào trong cột rỗng thì dịch cả cột
 		if(checkIndex<0)
 		{
 			// clear dữ liệu trong list cái này đi
 			CellGrid[0, col].ClearAndDestroyListGameObj();
 			// bắt đầu dịch dữ liệu
-			float delayPerRow = 0.1f;
-			float moveDuration = 0.15f;
 			for (int row = 1; row <= rowIndex; row++)
 			{
 				// add dữ liệu block của thằng này sang thằng trước
 				//CellGrid[row - 1, col] = CellGrid[row, col]; 
+				int countList = CellGrid[row - 1, col].lstBlock.Count;
+				int indexMove = 0;
 				foreach (var square in CellGrid[row, col].lstBlock)
 				{
-					CellGrid[row - 1, col].AddSquare(square);
+					float y = (float)(countList+indexMove) * StaticControl.VALUE_DEVIDE;
+					indexMove++;
+					CellGrid[row - 1, col].AddSquare(square,true);
+					sequence.Join(square.GetComponent<RectTransform>().DOAnchorPos(new Vector3(0,y,0),StaticControl.TIME_DOTWEEN_DURATION_ANIM));
 				}
+				//sequence.AppendCallback(() => { CellGrid[row, col].SetTextNumberTotalSameType();}); 
 				// sau đó sẽ clear cái list đi 
 				CellGrid[row, col].ClearListGameObj();
-
 			}
+			sequence.OnComplete(() =>
+			{
+				for (int row = 0; row <= rowIndex; row++)
+				{
+					CellGrid[row, col].SetTextNumberTotalSameType();
+				}
+				this.SetPlusForCellInGrid();
+				actionEndturn?.Invoke();
+			});
 		}
 		else
 		{
@@ -337,17 +378,30 @@ public class GridManager : MonoBehaviour
 			{
 				// add dữ liệu block của thằng này sang thằng trước
 				//CellGrid[row - 1, col] = CellGrid[row, col]; 
+				int countList = CellGrid[row - 1, col].lstBlock.Count;
+				int indexMove = 0;
 				foreach (var square in CellGrid[row, col].lstBlock)
 				{
-					CellGrid[row - 1, col].AddSquare(square);
+					float y = (float)(countList + indexMove) * StaticControl.VALUE_DEVIDE;
+					indexMove++;
+					CellGrid[row - 1, col].AddSquare(square,true);
+					sequence.Join(square.GetComponent<RectTransform>().DOAnchorPos(new Vector3(0, y, 0), StaticControl.TIME_DOTWEEN_DURATION_ANIM));
 				}
 				// sau đó sẽ clear cái list đi 
 				CellGrid[row, col].ClearListGameObj();
 
 			}
+			sequence.OnComplete(() =>
+			{
+				for (int row = checkIndex; row <= rowIndex; row++)
+				{
+					CellGrid[row - 1, col].SetTextNumberTotalSameType();
+				}
+				this.SetPlusForCellInGrid();
+				actionEndturn?.Invoke();
+			});
 		}
-		//Cập nhật lại text cho ô cuối
-		CellGrid[rowIndex, col].SetTextNumberTotalSameType();
+	
 	}
 	private int GetRowCellEmpty(int j)
 	{
@@ -622,6 +676,10 @@ public class GridManager : MonoBehaviour
 	/// </summary>
 	public void SetPlusForCellInGrid()
 	{
+		foreach (var cell in this.CellGrid)
+		{
+			cell.SetImageVisible(false);
+		}	
 	//	string s = "Giá trị của cell được set text là:";
 		for(int i=0;i<this._col;i++)
 		{
@@ -691,6 +749,7 @@ public class GridManager : MonoBehaviour
 			}
 			this.SetPlusForCellInGrid();
 			ScoreManager.Instance.CheckWin();
+			SupportController.Instance.IsUsingSP = false;
 		});
 	}
 	public void DoSpBOWLING(int i, int j)
@@ -737,7 +796,47 @@ public class GridManager : MonoBehaviour
 			}
 			this.SetPlusForCellInGrid();
 			ScoreManager.Instance.CheckWin();
+			SupportController.Instance.IsUsingSP = false;
+
 		});
+	}
+	public void DoSHUFFLE()
+	{
+		Sequence seq = DOTween.Sequence();
+
+		List<Cell> cellsHaveBlock = new List<Cell>();
+		// row -1 để không lấy hàng cuối
+		for (int i = 0; i < this._row - 1; i++)
+		{
+			for (int j = 0; j < this._col; j++)
+			{
+				cellsHaveBlock.Add(CellGrid[i, j]);
+			}
+		}
+		cellsHaveBlock = cellsHaveBlock.OrderBy(x => UnityEngine.Random.value).ToList();
+		int index = 0;
+		for (int i = 0; i < this._row - 1; i++)
+		{
+			for (int j = 0; j < this._col; j++)
+			{
+				Cell cellCache = this.GetCell(i, j);
+				int indexSibling = cellCache.transform.GetSiblingIndex();
+				if (cellCache == null)
+				{
+					Debug.Log("lỗi gì đó trong shuffle");
+					break;
+				}
+				CellGrid[i, j] = cellsHaveBlock[index++];
+				CellGrid[i, j].transform.SetSiblingIndex(index+this._row*this._col);
+				CellGrid[i, j].x = i;
+				CellGrid[i, j].y= j;
+				seq.Join(CellGrid[i, j].GetComponent<RectTransform>().DOAnchorPos(cellCache.GetComponent<RectTransform>().anchoredPosition, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
+			}
+		}
+		seq.onComplete = () => {
+			this.SetPlusForCellInGrid();
+			SupportController.Instance.IsUsingSP=false;
+		};
 	}
 	void MergeDic(Dictionary<ETypeBlock, int> target,Dictionary<ETypeBlock, int> source)
 	{

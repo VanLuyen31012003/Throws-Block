@@ -39,7 +39,12 @@ public class ItemDragAndClick : MonoBehaviour
 	}
 	public void SetData(int count)
 	{
-		UIText_Times.text = count.ToString();
+        if (count<=0)
+        {
+			UIText_Times.text = "+";
+		}
+		else
+			UIText_Times.text = count.ToString();
 	}
 	#endregion
 }

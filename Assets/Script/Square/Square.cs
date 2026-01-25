@@ -6,11 +6,6 @@ using UnityEngine;
 public class Square : MonoBehaviour
 {
 	#region serilize field
-	/// <summary>
-	/// độ dài cộng thêm cho tia ray
-	/// </summary>
-	[SerializeField]	
-	private float length = 0.1f;
 	#endregion
 
 	#region public and private field

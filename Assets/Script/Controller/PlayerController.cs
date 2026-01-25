@@ -25,6 +25,18 @@ public class PlayerController : Singleton<PlayerController>
 	#region public field
 	public FrameShoot FrameShoot=>this.frameShoot;
 
+	private bool _isEndTurn = true;
+	public bool IsEndTurn
+	{
+		get => _isEndTurn;
+		set
+		{
+			Debug.Log("IsEndTurn bị set = " + value + "\n" + Environment.StackTrace);
+			_isEndTurn = value;
+		}
+	}
+
+
 	public bool isDragging;
 	#endregion
 
@@ -84,10 +96,12 @@ public class PlayerController : Singleton<PlayerController>
 	/// </summary>
 	public void Shoot(int col)
 	{
-		if(ScoreManager.Instance.IsHaveTurn())
+		//nó phải còn lượt và đang k có lượt nào và thằng này đang k có đang sử dụng buff sp
+		if(ScoreManager.Instance.IsHaveTurn()&&this.IsEndTurn&&!SupportController.Instance.IsUsingSP)
 		{
 			/// trừ điểm nó đi
 			ScoreManager.Instance.MoveSub();
+			this.IsEndTurn=false;
 			this.frameShoot.currentCell.gameObject.transform.SetParent(GameManager.Instance.GridManager.transform);
 			this.frameShoot.currentCell.SetFxVisible(false);
 			Cell cellNeedMove = GameManager.Instance.GridManager.GetCellLastEmpty(col);
@@ -103,6 +117,7 @@ public class PlayerController : Singleton<PlayerController>
 	}
 	public void OnPointerDown()
 	{
+		SupportController.Instance.ResetItemSP();
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, null, out Vector2 startMousePos);
 		dragOffset = frameRect.anchoredPosition - startMousePos;
 		this.isDragging= true;
