@@ -336,6 +336,7 @@ public class GridManager : MonoBehaviour
 
 	public void TranslateCell(int rowIndex, int col, Action actionEndturn)
 	{
+		CellGrid[rowIndex, col].SetVisibleTextNumberTotalSameType(false);
 		int checkIndex = this.GetRowCellEmpty(col);
 		Sequence sequence = DOTween.Sequence();
 		//Nếu không có ô nào trong cột rỗng thì dịch cả cột
@@ -349,6 +350,8 @@ public class GridManager : MonoBehaviour
 				// add dữ liệu block của thằng này sang thằng trước
 				//CellGrid[row - 1, col] = CellGrid[row, col]; 
 				int countList = CellGrid[row - 1, col].lstBlock.Count;
+				CellGrid[row - 1, col].SetVisibleTextNumberTotalSameType(false);
+				CellGrid[row , col].SetVisibleTextNumberTotalSameType(false);
 				int indexMove = 0;
 				foreach (var square in CellGrid[row, col].lstBlock)
 				{
@@ -366,6 +369,7 @@ public class GridManager : MonoBehaviour
 				for (int row = 0; row <= rowIndex; row++)
 				{
 					CellGrid[row, col].SetTextNumberTotalSameType();
+				//	CellGrid[row, col].SetVisibleTextNumberTotalSameType(true);
 				}
 				this.SetPlusForCellInGrid();
 				actionEndturn?.Invoke();
@@ -378,6 +382,8 @@ public class GridManager : MonoBehaviour
 			{
 				// add dữ liệu block của thằng này sang thằng trước
 				//CellGrid[row - 1, col] = CellGrid[row, col]; 
+				CellGrid[row - 1, col].SetVisibleTextNumberTotalSameType(false);
+				CellGrid[row, col].SetVisibleTextNumberTotalSameType(false);
 				int countList = CellGrid[row - 1, col].lstBlock.Count;
 				int indexMove = 0;
 				foreach (var square in CellGrid[row, col].lstBlock)
@@ -396,6 +402,7 @@ public class GridManager : MonoBehaviour
 				for (int row = checkIndex; row <= rowIndex; row++)
 				{
 					CellGrid[row - 1, col].SetTextNumberTotalSameType();
+				//	CellGrid[row - 1, col].SetVisibleTextNumberTotalSameType(true);
 				}
 				this.SetPlusForCellInGrid();
 				actionEndturn?.Invoke();

@@ -216,10 +216,12 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 	{
 		block.transform.SetParent(this.transform);
 		float y = (float)(lstBlock.Count) * StaticControl.VALUE_DEVIDE;
-		if(!isFromTranslate)
-			block.transform.localPosition = new Vector2(0, y);
 		lstBlock.Add(block);
-		this.SetTextNumberTotalSameType();
+		if (!isFromTranslate)
+		{
+			block.transform.localPosition = new Vector2(0, y);
+			this.SetTextNumberTotalSameType();
+		}
 	}
 
 	/// <summary>
