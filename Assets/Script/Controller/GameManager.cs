@@ -49,9 +49,12 @@ public class GameManager : MonoBehaviour
         this.Initialize();
 		// clear đi đẻ chơi từ đầu 
 		PlayerPrefs.DeleteAll();
-	}
+		//lock fps để không bị lag
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+    }
 
-	private void Start()
+    private void Start()
     {
 		this.SetUpPlayGame();
 	}

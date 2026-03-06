@@ -236,7 +236,7 @@ public class GridManager : MonoBehaviour
 			this.dicCurrentLast[type] = path[index];
             AfterAllMergeDone(path[0].x, path[0].y, type);
             return;
-        }
+        } 
 
         Cell from = path[index];
         Cell to = path[index + 1];
@@ -306,7 +306,8 @@ public class GridManager : MonoBehaviour
 	{
 		if (ScoreManager.Instance.CheckWin())
 		{
-			PlayerController.Instance.FrameShoot.SpawnBulletSquare();
+            PlayerController.Instance.IsEndTurn = true;
+            PlayerController.Instance.FrameShoot.SpawnBulletSquare();
 			return;
 		}
 		// dịch ô nếu cần
@@ -324,14 +325,14 @@ public class GridManager : MonoBehaviour
 	}	
 	public void EnTurnPlay()
 	{
-		// hết lượt
-		if (!ScoreManager.Instance.IsHaveTurn())
+        PlayerController.Instance.IsEndTurn = true;
+        // hết lượt
+        if (!ScoreManager.Instance.IsHaveTurn())
 		{
 			ScoreManager.Instance.ShowLose();
 		}
 		this.SetPlusForCellInGrid();
 		PlayerController.Instance.FrameShoot.SpawnBulletSquare();
-		PlayerController.Instance.IsEndTurn = true;
 	}
 
 	public void TranslateCell(int rowIndex, int col, Action actionEndturn)
@@ -731,83 +732,85 @@ public class GridManager : MonoBehaviour
 	/// <summary>
 	///  thực thi hiệu ứng hỗ trợ tên lửa
 	/// </summary>
-	public void DoSpROCKET(int i, int j)
+	public void DoSpROCKET(int i, int j, Action actDone)
 	{
-		Sequence sequence = DOTween.Sequence();
-		Dictionary<ETypeBlock, int> dic = new Dictionary<ETypeBlock, int>();
-		for (int index = 0; index < this._row; index++)
-		{
-			this.MergeDic(dic, CellGrid[index, j].GetNumberSquarePerType());
-			sequence.Join(CellGrid[index, j].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
-		}
-		sequence.OnComplete(() =>
-		{
-			for (int index = 0; index < this._row; index++)
-			{
-				CellGrid[index, j].DestroyListGameObj();
-				CellGrid[index, j].transform.localScale = new Vector3(1, 1, 1);
+        Sequence sequence = DOTween.Sequence();
+        // dic này sẽ lưu tất cả giá trị số square ăn được từ việc dùng sp
+        Dictionary<ETypeBlock, int> dic = new Dictionary<ETypeBlock, int>();
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                int nx = i + dx;
+                int ny = j + dy;
 
-				//CellGrid[index, j].transform.DOScale(1,0.01f);
-			}
-			foreach (var e in dic)
-			{
-				ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
+                if (GetCell(nx, ny) == null)
+                    continue;
+                this.MergeDic(dic, CellGrid[nx, ny].GetNumberSquarePerType());
+                sequence.Join(CellGrid[nx, ny].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
+            }
+        }
+        sequence.OnComplete(() =>
+        {
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
 
-			}
-			this.SetPlusForCellInGrid();
-			ScoreManager.Instance.CheckWin();
-			SupportController.Instance.IsUsingSP = false;
-		});
-	}
-	public void DoSpBOWLING(int i, int j)
+                    int nx = i + dx;
+                    int ny = j + dy;
+
+                    if (GetCell(nx, ny) == null)
+                        continue;
+                    CellGrid[nx, ny].DestroyListGameObj();
+                    CellGrid[nx, ny].transform.localScale = new Vector3(1, 1, 1);
+
+                    //	CellGrid[nx, ny].transform.DOScale(1, 0.01f);
+
+                }
+            }
+            foreach (var e in dic)
+            {
+                ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
+
+            }
+            this.SetPlusForCellInGrid();
+            ScoreManager.Instance.CheckWin();
+		//	EventSystem.Trigger(StaticControl.ActionWhenEndUsingSp);
+            actDone?.Invoke();
+
+        });
+    }
+	public void DoSpBOWLING(int i, int j, Action actDone)
 	{
-		Sequence sequence = DOTween.Sequence();
-		// dic này sẽ lưu tất cả giá trị số square ăn được từ việc dùng sp
-		Dictionary<ETypeBlock,int> dic = new Dictionary<ETypeBlock,int>();
-		for (int dx = -1; dx <= 1; dx++)
-		{
-			for (int dy = -1; dy <= 1; dy++)
-			{
-				int nx = i + dx;
-				int ny = j + dy;
+        Sequence sequence = DOTween.Sequence();
+        Dictionary<ETypeBlock, int> dic = new Dictionary<ETypeBlock, int>();
+        for (int index = 0; index < this._row; index++)
+        {
+            this.MergeDic(dic, CellGrid[index, j].GetNumberSquarePerType());
+            sequence.Join(CellGrid[index, j].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
+        }
+        sequence.OnComplete(() =>
+        {
+            for (int index = 0; index < this._row; index++)
+            {
+                CellGrid[index, j].DestroyListGameObj();
+                CellGrid[index, j].transform.localScale = new Vector3(1, 1, 1);
 
-				if (GetCell(nx, ny) == null)
-					continue;
-				this.MergeDic(dic, CellGrid[nx, ny].GetNumberSquarePerType());
-				sequence.Join(CellGrid[nx, ny].transform.DOScale(0, StaticControl.TIME_DOTWEEN_SCALE_ANIM).SetEase(Ease.OutQuad));
-			}
-		}
-		sequence.OnComplete(() =>
-		{
-			for (int dx = -1; dx <= 1; dx++)
-			{
-				for (int dy = -1; dy <= 1; dy++)
-				{
+                //CellGrid[index, j].transform.DOScale(1,0.01f);
+            }
+            foreach (var e in dic)
+            {
+                ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
 
-					int nx = i + dx;
-					int ny = j + dy;
-
-					if (GetCell(nx, ny) == null)
-						continue;
-					CellGrid[nx, ny].DestroyListGameObj();
-					CellGrid[nx, ny].transform.localScale = new Vector3(1,1,1);
-
-				//	CellGrid[nx, ny].transform.DOScale(1, 0.01f);
-
-				}
-			}
-			foreach(var e in dic)
-			{
-				ScoreManager.Instance.AddPointBySp(e.Value, e.Key);
-
-			}
-			this.SetPlusForCellInGrid();
-			ScoreManager.Instance.CheckWin();
-			SupportController.Instance.IsUsingSP = false;
-
-		});
+            }
+            this.SetPlusForCellInGrid();
+            ScoreManager.Instance.CheckWin();
+            actDone?.Invoke();
+        });
+        
 	}
-	public void DoSHUFFLE()
+	public void DoSHUFFLE(Action actDone)
 	{
 		Sequence seq = DOTween.Sequence();
 
@@ -842,8 +845,8 @@ public class GridManager : MonoBehaviour
 		}
 		seq.onComplete = () => {
 			this.SetPlusForCellInGrid();
-			SupportController.Instance.IsUsingSP=false;
-		};
+            actDone?.Invoke();
+        };
 	}
 	void MergeDic(Dictionary<ETypeBlock, int> target,Dictionary<ETypeBlock, int> source)
 	{

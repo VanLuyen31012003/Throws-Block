@@ -48,6 +48,13 @@ public static class StaticControl
 	/// Giá trị để dịch cell lên y 1 đoạn
 	/// </summary>
 	public static int VALUE_TRANSLATETOP = 60;
-	#endregion
+    #endregion
 
+    #region Key For EventSystem
+    public static string ActionWhenStartPlay = "ActionWhenStartPlay"; // key để dùng gọi các sự kiện khi mà anim chơi đang thực thi
+	public static string ActionWhenEndPlay = "ActionWhenEndAnim"; // key để dùng gọi các sự kiện khi mà anim chơi đã kết thúc
+    public static string ActionWhenStartUsingSp = "ActionWhenStartUsingSp"; // key để dùng gọi các sự kiện khi mà sử dụng sự hỗ trợ đang thực thi
+    public static string ActionWhenEndUsingSp = "ActionWhenEndUsingSp"; // key để dùng gọi các sự kiện khi mà sử dụng sự hỗ trợ kết thúc
+
+    #endregion
 }

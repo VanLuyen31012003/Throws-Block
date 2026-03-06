@@ -26,25 +26,50 @@ public class ItemDragAndClick : MonoBehaviour
 	{
 		Initialize();
 	}
-	#endregion
+    private void OnEnable()
+    {
+        SubscribeEventSystem();
+    }
+	private void OnDisable()
+	{
+		UnSubscribeEventSystem();
+    }
+    #endregion
 
-	#region function logic
-	private void Initialize()
+    #region function logic
+    private void Initialize()
 	{
 		this.UIButton_Select.onClick.AddListener(this.UIButton_Select_Clicked);
 	}	
 	private void UIButton_Select_Clicked()
 	{
-		SupportController.Instance.SetItemSpClick(this);
+        SupportController.Instance.SetItemSpClick(this);
 	}
 	public void SetData(int count)
 	{
         if (count<=0)
-        {
-			UIText_Times.text = "+";
-		}
+        {	
+			UIText_Times.text = "+";	
+			Utils.SetActiveButton(UIButton_Select, false);
+        }
 		else
 			UIText_Times.text = count.ToString();
 	}
-	#endregion
+	private void SubscribeEventSystem()
+	{
+		//EventSystem.Subscribe(StaticControl.ActionWhenStartPlay+ TypeItemClickDrag.ToString(), ()=> { Utils.SetActiveButton(UIButton_Select, false); });
+  //      EventSystem.Subscribe(StaticControl.ActionWhenEndPlay + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, true); });
+
+        EventSystem.Subscribe(StaticControl.ActionWhenStartUsingSp + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, false); });
+        EventSystem.Subscribe(StaticControl.ActionWhenEndUsingSp + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, true); });
+
+    }
+    private void UnSubscribeEventSystem()
+    {
+        //EventSystem.Unsubscribe(StaticControl.ActionWhenStartPlay + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, false); });
+        //EventSystem.Unsubscribe(StaticControl.ActionWhenEndPlay + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, true); });
+        EventSystem.Unsubscribe(StaticControl.ActionWhenStartUsingSp + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, false); });
+        EventSystem.Unsubscribe(StaticControl.ActionWhenEndUsingSp + TypeItemClickDrag.ToString(), () => { Utils.SetActiveButton(UIButton_Select, true); });
+    }
+    #endregion
 }

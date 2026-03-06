@@ -30,7 +30,6 @@ public class PlayerController : Singleton<PlayerController>
 		get => _isEndTurn;
 		set
 		{
-			Debug.Log("IsEndTurn bị set = " + value + "\n" + Environment.StackTrace);
 			_isEndTurn = value;
 		}
 	}
@@ -98,8 +97,9 @@ public class PlayerController : Singleton<PlayerController>
 		//nó phải còn lượt và đang k có lượt nào và thằng này đang k có đang sử dụng buff sp
 		if(ScoreManager.Instance.IsHaveTurn()&&this.IsEndTurn&&!SupportController.Instance.IsUsingSP)
 		{
-			/// trừ điểm nó đi
-			ScoreManager.Instance.MoveSub();
+			Debug.Log("PlayerController Shoot col = " + col);
+            /// trừ điểm nó đi
+            ScoreManager.Instance.MoveSub();
 			this.IsEndTurn=false;
 			this.frameShoot.currentCell.gameObject.transform.SetParent(GameManager.Instance.GridManager.transform);
 			this.frameShoot.currentCell.SetFxVisible(false);

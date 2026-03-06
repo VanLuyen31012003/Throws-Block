@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,13 +33,13 @@ public class SupportController : Singleton<SupportController>
 		this.Initialize();
 	}
 	public void Initialize()
-	{
+	{                                       
 		this.ItemShuffle.SetData(this.GetTimesCanUseSp(ETypeItemClickDrag.SHUFFLE));
-		this.ItemRocket.SetData(this.GetTimesCanUseSp(ETypeItemClickDrag.ROKET));
+        this.ItemRocket.SetData(this.GetTimesCanUseSp(ETypeItemClickDrag.ROKET));
 		this.ItemBowling.SetData(this.GetTimesCanUseSp(ETypeItemClickDrag.BOWLING));
+    }
 
-	}
-	public void OnPointerDown(ItemDragAndClick item)
+    public void OnPointerDown(ItemDragAndClick item)
     {
         this._ItemDragAndClick = item;
         this.IsUsingSP = true;
@@ -50,10 +51,12 @@ public class SupportController : Singleton<SupportController>
     /// <param name="item"></param>
     public void SetItemSpClick(ItemDragAndClick item)
     {
-		if (this.IsUsingSP||!PlayerController.Instance.IsEndTurn||this.GetTimesCanUseSp(item.TypeItemClickDrag)<=0)
+        if (this.IsUsingSP||!PlayerController.Instance.IsEndTurn||this.GetTimesCanUseSp(item.TypeItemClickDrag)<=0)
 			return;
+        EventSystem.Trigger(StaticControl.ActionWhenStartUsingSp + item.TypeItemClickDrag.ToString());
         this._ItemDragAndClick= item;
-		if(item.TypeItemClickDrag== ETypeItemClickDrag.SHUFFLE)
+        item.transform.DOScale(0.9f, StaticControl.TIME_DOTWEEN_SCALE_ANIM); 
+        if (item.TypeItemClickDrag== ETypeItemClickDrag.SHUFFLE)
 		{
 			this.ExecuteSp(1,1);
 		}	
@@ -72,20 +75,32 @@ public class SupportController : Singleton<SupportController>
         {
             case ETypeItemClickDrag.SHUFFLE:
                 {
-					instanceGrid.DoSHUFFLE();
-					UpdateTimesCanUseSP(ETypeItemClickDrag.SHUFFLE, -1);
+                    instanceGrid.DoSHUFFLE(() => {
+						EventSystem.Trigger(StaticControl.ActionWhenEndUsingSp + ETypeItemClickDrag.SHUFFLE.ToString());
+                        ItemShuffle.transform.DOScale(Vector3.one, StaticControl.TIME_DOTWEEN_SCALE_ANIM);
+                        UpdateTimesCanUseSP(ETypeItemClickDrag.SHUFFLE, -1);
+                        this.IsUsingSP = false;
+                    });
 					break;
                 }
 			case ETypeItemClickDrag.ROKET:
 				{
-                    instanceGrid.DoSpROCKET(i,j);
-					UpdateTimesCanUseSP(ETypeItemClickDrag.ROKET, -1);
+                    instanceGrid.DoSpROCKET(i,j, () => {
+						EventSystem.Trigger(StaticControl.ActionWhenEndUsingSp + ETypeItemClickDrag.ROKET.ToString());
+                        ItemRocket.transform.DOScale(Vector3.one, StaticControl.TIME_DOTWEEN_SCALE_ANIM);
+                        UpdateTimesCanUseSP(ETypeItemClickDrag.ROKET, -1);
+                        this.IsUsingSP = false;
+                    });
 					break;
 				}
 			case ETypeItemClickDrag.BOWLING:
 				{
-					instanceGrid.DoSpBOWLING(i, j);
-					UpdateTimesCanUseSP(ETypeItemClickDrag.BOWLING, -1);
+                     instanceGrid.DoSpBOWLING(i, j, () => {
+						 EventSystem.Trigger(StaticControl.ActionWhenEndUsingSp + ETypeItemClickDrag.BOWLING.ToString());
+                        ItemBowling.transform.DOScale(Vector3.one, StaticControl.TIME_DOTWEEN_SCALE_ANIM);
+                        UpdateTimesCanUseSP(ETypeItemClickDrag.BOWLING, -1);
+						this.IsUsingSP=false;
+                    });
 					break;
 				}
 		}
@@ -147,17 +162,19 @@ public class SupportController : Singleton<SupportController>
 				}
 			case ETypeItemClickDrag.ROKET:
 				{
-					times = PlayerPrefs.GetInt(StaticControl.KEY_ROKET, 0);
-					PlayerPrefs.SetInt(StaticControl.KEY_ROKET, times + countAppend);
-					this.ItemRocket.SetData(times + countAppend);
-					break;
-				}
+                    times = PlayerPrefs.GetInt(StaticControl.KEY_ROKET, 0);
+                    PlayerPrefs.SetInt(StaticControl.KEY_ROKET, times + countAppend);
+                  //  this.ItemBowling.SetData(times + countAppend);
+                    this.ItemRocket.SetData(times + countAppend);
+                    break;
+                }
 			case ETypeItemClickDrag.BOWLING:
 				{
-					times = PlayerPrefs.GetInt(StaticControl.KEY_BOWLING, 0);
-					PlayerPrefs.SetInt(StaticControl.KEY_BOWLING, times + countAppend);
-					this.ItemBowling.SetData(times + countAppend);
-					break;
+                    times = PlayerPrefs.GetInt(StaticControl.KEY_BOWLING, 0);
+                    PlayerPrefs.SetInt(StaticControl.KEY_BOWLING, times + countAppend);
+                    //this.ItemRocket.SetData(times + countAppend);
+                    this.ItemBowling.SetData(times + countAppend);
+                    break;
 				}
 		}
 	}
