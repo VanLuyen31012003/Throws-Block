@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager Instance=>_instance;
 	#endregion
 
-	#region private field
+	#region private field	
 	/// <summary>
 	/// Dữ liệu thông tin điểm số
 	/// </summary>

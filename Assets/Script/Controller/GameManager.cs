@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
 	private void Initialize()
     {
 		_instance = this;
-	}
+		DontDestroyOnLoad(this.gameObject);
+    }
 	public void SetUpPlayGame()
 	{
 		LevelConfig levelConfigNow = LevelManager.Instance.GetLevel();

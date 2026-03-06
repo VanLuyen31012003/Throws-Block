@@ -4,7 +4,7 @@
       "level": 1,
       "rows": 6,
       "cols": 6,
-      "numberInARound": 15,
+      "numberInARound": 2,
       "targets": [
         {
           "type": 1,

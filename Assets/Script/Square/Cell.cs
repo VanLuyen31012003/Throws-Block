@@ -117,11 +117,13 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 		{
 			for (int i = 0; i < count; i++)
 			{
-				GameObject block = Instantiate(prefapInst, this.transform);
-				float y = (float)(lstBlock.Count)*6;
-				block.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, y);
-				block.SetActive(true);
-				lstBlock.Add(block);
+				//GameObject block = Instantiate(prefapInst, this.transform);
+				GameObject blockPool = ObjectPool.Instance.GetObject(type, prefapInst);
+				blockPool.transform.SetParent(this.transform);
+                float y = (float)(lstBlock.Count)*6;
+                blockPool.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, y);
+                blockPool.SetActive(true);
+				lstBlock.Add(blockPool);
 			}
 		}	
 		this.SetTextNumberTotalSameType();
@@ -340,9 +342,10 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 	{
 		foreach(GameObject gameobj in this.lstBlock)
 		{
-			Destroy(gameobj);
-		}
-		this.ClearListGameObj();
+			//Destroy(gameobj);
+            ObjectPool.Instance.ReturnObject(gameobj.GetComponent<Square>().typeBlock, gameobj);
+        }
+        this.ClearListGameObj();
 		// đáng nhẽ sẽ clear list đi nhưng mà do cái này bị trỏ chung vùng nhớ
 	}
 	/// <summary>
@@ -356,8 +359,9 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 	{
 		foreach(var square in this.lstBlock)
 		{
-			Destroy(square);
-		}	
+			//Destroy(square);
+			ObjectPool.Instance.ReturnObject(square.GetComponent<Square>().typeBlock, square);
+        }	
 		this.lstBlock.Clear();
 		this.SetTextNumberTotalSameType();
 	}
@@ -373,9 +377,10 @@ public class Cell :MonoBehaviour, IPointerClickHandler
 			if (this.lstBlock[i].GetComponent<Square>().typeBlock == type)
 			{
 				/// xóa square đó
-				Destroy(this.lstBlock[i]);
-				/// sau đó xóa đối tượng square đó trong lstBlock
-				lstBlock.RemoveAt(i);
+				//Destroy(this.lstBlock[i]);
+                ObjectPool.Instance.ReturnObject(this.lstBlock[i].GetComponent<Square>().typeBlock, this.lstBlock[i]);
+                /// sau đó xóa đối tượng square đó trong lstBlock
+                lstBlock.RemoveAt(i);
 
 			}
 			else
