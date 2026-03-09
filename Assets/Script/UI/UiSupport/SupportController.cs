@@ -121,7 +121,9 @@ public class SupportController : Singleton<SupportController>
     {
         if(this._ItemDragAndClick != null)
         {
-			this._ItemDragAndClick = null;
+            EventSystem.Trigger(StaticControl.ActionWhenEndUsingSp + _ItemDragAndClick.TypeItemClickDrag.ToString());
+            _ItemDragAndClick.transform.DOScale(Vector3.one, StaticControl.TIME_DOTWEEN_SCALE_ANIM);
+            this._ItemDragAndClick = null;
 			this.IsUsingSP=false;
 		}
 	}

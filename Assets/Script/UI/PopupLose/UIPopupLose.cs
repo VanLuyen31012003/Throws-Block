@@ -27,16 +27,20 @@ public class UIPopupLose : BasePopup
 
 	private void Initialize()
 	{
-		this.UIButton_BackHome.onClick.AddListener(this.UIButton_BackHome_Clicked);
-		this.UIButton_PlayLevelAgain.onClick.AddListener(this.UIButton_PlayLevelAgain_Clicked);
+		//this.UIButton_BackHome.onClick.AddListener(this.UIButton_BackHome_Clicked);
+		//this.UIButton_PlayLevelAgain.onClick.AddListener(this.UIButton_PlayLevelAgain_Clicked);
 
-	}
+		UIHelper.AddButtonClickNormal(UIButton_BackHome, this.UIButton_BackHome_Clicked);
+		UIHelper.AddButtonClickNormal(UIButton_PlayLevelAgain, this.UIButton_PlayLevelAgain_Clicked);
+
+    }
 	/// <summary>
 	/// Hàm xử lý cho việc chơi tiếp
 	/// </summary>
 	private void UIButton_BackHome_Clicked()
 	{
-		this.HidePopup();
+		SenceController.Instance.LoadSenceHome(StaticControl.KEY_SENCE_START);
+        this.HidePopup();
 	}
 	/// <summary>
 	/// Hàm xử lý cho việc chơi lại

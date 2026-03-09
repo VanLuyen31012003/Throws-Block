@@ -1601,7 +1601,7 @@ GameObject:
   - component: {fileID: 477810778}
   - component: {fileID: 477810779}
   m_Layer: 5
-  m_Name: UIManager
+  m_Name: GamePlayManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 477810775}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b5e6994102d52346b8a213a2573438b, type: 3}
+  m_Script: {fileID: 11500000, guid: b0532cb1e51788b438bde0164549f41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uIPopupController: {fileID: 2048120705}

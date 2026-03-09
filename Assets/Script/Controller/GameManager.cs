@@ -73,10 +73,10 @@ public class GameManager : MonoBehaviour
 	{
 		LevelConfig levelConfigNow = LevelManager.Instance.GetLevel();
 		/// Build giao diện grid
-		gridManager.Initialize(levelConfigNow);
+		gridManager.Initialize(levelConfigNow); 
 		ScoreManager.Instance.SetData(levelConfigNow);
 		//set up điểm yêu cầu cho setData
-		UIManager.Instance.uICoreHub.SetData(levelConfigNow);
+		GamePlayManager.Instance.uICoreHub.SetData(levelConfigNow);
 		PlayerController.Instance.Refresh();
 		SupportController.Instance.Refresh();
 	}

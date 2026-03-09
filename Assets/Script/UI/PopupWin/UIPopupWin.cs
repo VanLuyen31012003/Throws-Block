@@ -27,10 +27,13 @@ public class UIPopupWin : BasePopup
 
 	private void Initialize()
 	{
-		this.UIButton_PlayNextLevel.onClick.AddListener(this.UIButton_PlayNextLevel_Clicked);
-		this.UIButton_PlayLevelAgain.onClick.AddListener(this.UIButton_PlayLevelAgain_Clicked);
+	//	this.UIButton_PlayNextLevel.onClick.AddListener(this.UIButton_PlayNextLevel_Clicked);
+	//	this.UIButton_PlayLevelAgain.onClick.AddListener(this.UIButton_PlayLevelAgain_Clicked);
 
-	}
+		UIHelper.AddButtonClickNormal(UIButton_PlayNextLevel, this.UIButton_PlayNextLevel_Clicked);
+		UIHelper.AddButtonClickNormal(UIButton_PlayLevelAgain, this.UIButton_PlayLevelAgain_Clicked);
+
+    }
 	/// <summary>
 	/// Hàm xử lý cho việc chơi tiếp
 	/// </summary>

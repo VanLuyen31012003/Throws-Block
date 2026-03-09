@@ -39,8 +39,8 @@ public class ItemDragAndClick : MonoBehaviour
     #region function logic
     private void Initialize()
 	{
-		this.UIButton_Select.onClick.AddListener(this.UIButton_Select_Clicked);
-	}	
+		UIHelper.AddButtonClickNormal(UIButton_Select, UIButton_Select_Clicked);
+    }	
 	private void UIButton_Select_Clicked()
 	{
         SupportController.Instance.SetItemSpClick(this);

@@ -482,7 +482,7 @@ public class GridManager : MonoBehaviour
 		{
 			Sequence sq = DOTween.Sequence();
 			this.dicCurrentLast[typeKey].SetVisibleTextNumberTotalSameType(false);
-			Vector3 positionPlayAnim= UIManager.Instance.uICoreHub.GetPositionSquareMission(typeKey);
+			Vector3 positionPlayAnim= GamePlayManager.Instance.uICoreHub.GetPositionSquareMission(typeKey);
             // thực thi hiệu ứng scale xuống
             float startTime = 0f;
             if (positionPlayAnim==Vector3.zero)
@@ -522,7 +522,7 @@ public class GridManager : MonoBehaviour
 			sq.OnComplete(() => {
                 this.dicCurrentLast[typeKey].ClearListSquareHaveSameTypeOnTop();
                 // cập nhật lại gjá trị nhiệm vụ
-                UIManager.Instance.uICoreHub.SetTargetItem(typeKey, totalRemainPoint);
+                GamePlayManager.Instance.uICoreHub.SetTargetItem(typeKey, totalRemainPoint);
 				// lấy ra 1 ô trong grid đang có cùng type và số lượng nhiều nhất
 				Cell cellCache = this.GetCellAddMoreInGrid(typeKey, this.dicCurrentLast[typeKey].x, this.dicCurrentLast[typeKey].y);
 				// nếu mà không còn ô nào cùng loại thì clear đi

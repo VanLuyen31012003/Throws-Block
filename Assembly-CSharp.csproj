@@ -60,6 +60,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f2\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\UI\HomeMenu\PannelChild\MainMenu.cs" />
     <Compile Include="Assets\Script\DataGame\Level Config\LevelConfig.cs" />
     <Compile Include="Assets\Script\Square\Square.cs" />
     <Compile Include="Assets\Script\UI\PopupLose\UIPopupLose.cs" />
@@ -68,20 +69,28 @@
     <Compile Include="Assets\Script\General\Singleten.cs" />
     <Compile Include="Assets\Script\UI\CoreHub\UICoreHub.cs" />
     <Compile Include="Assets\Script\UI\UIcore\ControlAspectRation.cs" />
+    <Compile Include="Assets\Script\Controller\UIController\TabController\TabItem.cs" />
     <Compile Include="Assets\Script\UI\UiSupport\ItemDragAndClick.cs" />
     <Compile Include="Assets\Script\UI\UIcore\BasePopup.cs" />
     <Compile Include="Assets\Script\General\ObjectPool.cs" />
+    <Compile Include="Assets\Script\UtilsAndCore\UIHelper.cs" />
+    <Compile Include="Assets\Script\Controller\UIManager.cs" />
     <Compile Include="Assets\Script\UtilsAndCore\StaticControl.cs" />
+    <Compile Include="Assets\Script\UI\HomeMenu\HomeMenu.cs" />
     <Compile Include="Assets\Script\Controller\PlayerController.cs" />
     <Compile Include="Assets\Script\Square\Cell.cs" />
+    <Compile Include="Assets\Script\UI\UILoading\UILoading.cs" />
+    <Compile Include="Assets\Script\Controller\SenceController.cs" />
     <Compile Include="Assets\Script\Controller\LevelManager\LevelManager.cs" />
     <Compile Include="Assets\Script\UI\TargetPrefapUI\TargetPrefapUI.cs" />
-    <Compile Include="Assets\Script\UI\UIcore\UIManager.cs" />
+    <Compile Include="Assets\Script\UI\UIcore\GamePlayManager.cs" />
     <Compile Include="Assets\Script\UtilsAndCore\BfsPath.cs" />
     <Compile Include="Assets\Script\UtilsAndCore\Utils.cs" />
+    <Compile Include="Assets\Script\Controller\SoundManager.cs" />
     <Compile Include="Assets\Script\UI\UIcore\UIPopupController.cs" />
     <Compile Include="Assets\Script\SliderShoot\FrameShoot\FrameShoot.cs" />
     <Compile Include="Assets\Script\Controller\GameManager.cs" />
+    <Compile Include="Assets\Script\Controller\UIController\TabController\TabController.cs" />
     <Compile Include="Assets\Script\UI\UiSupport\SupportController.cs" />
     <Compile Include="Assets\Script\Square\CellBackGround.cs" />
     <Compile Include="Assets\Script\UI\PopupWin\UIPopupWin.cs" />

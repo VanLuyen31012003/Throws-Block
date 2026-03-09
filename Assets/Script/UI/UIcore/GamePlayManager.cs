@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class GamePlayManager : MonoBehaviour
 {
 	#region singleten
-	private static UIManager _instance;
-    public static UIManager Instance=>_instance;
+	private static GamePlayManager _instance;
+    public static GamePlayManager Instance=>_instance;
 	#endregion
 
 	#region Serilize Field

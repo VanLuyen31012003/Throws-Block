@@ -109,7 +109,7 @@ public class ScoreManager : MonoBehaviour
 				break;
 			}
 		}
-		UIManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);		
+		GamePlayManager.Instance.uICoreHub.SetTargetItem(type, totalRemainPoint);		
 	}
 	public bool IsEnoughToMove()
 	{
@@ -130,7 +130,7 @@ public class ScoreManager : MonoBehaviour
 	{
 		this.TotalRemainTurn -= 1;
 		// cập nhật lại giao diện
-		UIManager.Instance.uICoreHub.SetNumberRemain(this.TotalRemainTurn);	
+		GamePlayManager.Instance.uICoreHub.SetNumberRemain(this.TotalRemainTurn);	
     }
     /// <summary>
     /// Trừ đi một lượt di chuyển
@@ -157,11 +157,11 @@ public class ScoreManager : MonoBehaviour
 	}
     public void ShowLose()
     {
-        UIManager.Instance.uIPopupController.ShowLosePopup();
+        GamePlayManager.Instance.uIPopupController.ShowLosePopup();
     }
     public void ShowWin()
     {
-        UIManager.Instance.uIPopupController.ShowWinPopup();
+        GamePlayManager.Instance.uIPopupController.ShowWinPopup();
     }
 	
     #endregion

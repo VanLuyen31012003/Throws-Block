@@ -57,4 +57,22 @@ public static class StaticControl
     public static string ActionWhenEndUsingSp = "ActionWhenEndUsingSp"; // key để dùng gọi các sự kiện khi mà sử dụng sự hỗ trợ kết thúc
 
     #endregion
+
+    #region Key For Sence
+	public static string KEY_SENCE_START = "Start"; // key để dùng gọi home screen
+    public static string KEY_SENCE_PLAY = "MainSence"; // key để dùng gọi sence chính
+    #endregion
+}
+public static class UIConstant
+{ 
+    #region Key Prefab Popup
+	public static string UIHomeMenu = "UIHomeMenu/HomeMenu"; 
+	public static string UILoading = "UILoading"; 
+    #endregion
+}
+public enum ESoundIndex
+{
+    Background = 0,
+	ButtonClick = 1,
+	SoundBlock = 2,
 }
