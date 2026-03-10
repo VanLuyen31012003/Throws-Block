@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -10,6 +11,9 @@ public class UIManager : Singleton<UIManager>
 
     [SerializeField]
     private UILoading UILoading;
+
+    [SerializeField]
+    private Image imgBlack;
 
     private Dictionary<string,GameObject> dicPopup = new Dictionary<string, GameObject>();
     protected void Start()
@@ -56,5 +60,9 @@ public class UIManager : Singleton<UIManager>
         {
             child.gameObject.SetActive(false);
         }
+    }
+    public void ShowBlackScreen(bool value)
+    {
+        this.imgBlack.gameObject.SetActive(value);
     }
 }

@@ -19,12 +19,14 @@ public class SenceController : Singleton<SenceController>
     } 
     public void LoadSenceHome(string nameSence)
     {
+        UIManager.Instance.ShowBlackScreen(true);
         UIManager.Instance.InitializedOnLoad();
         LoadSence(nameSence);
     }
     public void LoadSencePlay(string nameSence)
     {
         UIManager.Instance.HideAllPopup();
+        UIManager.Instance.ShowBlackScreen(false);
         LoadSence(nameSence);
     }
 }

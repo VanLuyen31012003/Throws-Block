@@ -272,6 +272,7 @@ public class GridManager : MonoBehaviour
 			// AddSquare sau khi anim của square đó xong
 			seq.InsertCallback(startTime + StaticControl.TIME_DOTWEEN_DURATION_ANIM, () =>
             {
+				SoundManager.Instance.PlaySoundBlock();
                 to.AddSquare(square);
             });
             i++;

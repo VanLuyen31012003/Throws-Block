@@ -98,6 +98,7 @@ public class PlayerController : Singleton<PlayerController>
 		if(ScoreManager.Instance.IsHaveTurn()&&this.IsEndTurn&&!SupportController.Instance.IsUsingSP)
 		{
 			Debug.Log("PlayerController Shoot col = " + col);
+            SoundManager.Instance.PlaySoundBlock();
             /// trừ điểm nó đi
             ScoreManager.Instance.MoveSub();
 			this.IsEndTurn=false;
